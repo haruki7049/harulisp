@@ -5,6 +5,7 @@ mod input {
         //Stdout,
     }
 
+    #[allow(dead_code)]
     fn check_in_repl(terminal_statement: TerminalStatement) -> bool {
         if terminal_statement == TerminalStatement::REPL {
             true
@@ -16,7 +17,9 @@ mod input {
 
 mod lexer {
     use std::fmt;
+
     #[derive(Debug, PartialEq)]
+    #[allow(dead_code)]
     pub enum Token {
         Integer(isize),
         Symbol(String),
