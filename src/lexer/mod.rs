@@ -31,7 +31,7 @@ impl fmt::Display for TokenError {
     }
 }
 
-fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
+pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
     let p = program.replace("(", " ( ").replace(")", " ) ");
     let words = p.split_whitespace();
     let mut tokens: Vec<Token> = Vec::new();

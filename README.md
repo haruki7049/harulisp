@@ -6,8 +6,8 @@ My lisp implementation.
 
 - [ ] make harulisp compiler, from harulisp code to native code.
 - [ ] MAKE this main structure, like REPL!!
-- [ ] make hexer
-- [ ] make parser
+- [x] make hexer
+- [x] make parser
 - [ ] make evaluator
 - [ ] make REPL
 

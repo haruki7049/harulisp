@@ -1,6 +1,7 @@
 use std::fmt;
 
-enum Object {
+#[derive(Debug, PartialEq)]
+pub enum Object {
     Void,
     Integer(isize),
     Bool(bool),
@@ -42,5 +43,32 @@ impl fmt::Display for Object {
                 write!(f, ")")
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod test_object {
+    use crate::object::Object;
+
+    #[test]
+    fn test_display_object() {
+        let object: Object = Object::List(vec![
+            Object::Symbol("+".to_string()),
+            Object::Integer(1),
+            Object::Integer(3),
+        ]);
+
+        println!("{}", object);
+    }
+
+    #[test]
+    fn test_debug_object() {
+        let object: Object = Object::List(vec![
+            Object::Symbol("+".to_string()),
+            Object::Integer(1),
+            Object::Integer(3),
+        ]);
+
+        println!("{:?}", object);
     }
 }
