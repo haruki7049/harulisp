@@ -1,5 +1,5 @@
-use crate::object::Object;
 use crate::env::Env;
+use crate::object::Object;
 use crate::parser;
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -30,10 +30,10 @@ fn eval_list(list: &Vec<Object>, env: &mut Rc<RefCell<Env>>) -> Result<Object, S
         Object::Symbol(s) => match s.as_str() {
             "+" | "-" | "*" | "/" | "<" | ">" | "=" | "!=" => {
                 return eval_binary_op(&list, env);
-            },
+            }
             "define" => eval_define(&list, env),
             "if" => eval_if(&list, env),
-            "lambda" =>eval_function_definition(&list),
+            "lambda" => eval_function_definition(&list),
             _ => eval_function_call(&s, &list, env),
         },
         _ => {
@@ -137,7 +137,7 @@ fn eval_function_definition(list: &Vec<Object>) -> Result<Object, String> {
                 }
             }
             parameters
-        },
+        }
         _ => return Err(format!("Invalid lambda")),
     };
 
@@ -149,7 +149,11 @@ fn eval_function_definition(list: &Vec<Object>) -> Result<Object, String> {
     Ok(Object::Lambda(parameters, body))
 }
 
-fn eval_function_call(symbol: &str, list: &Vec<Object>, env: &mut Rc<RefCell<Env>>) -> Result<Object, String> {
+fn eval_function_call(
+    symbol: &str,
+    list: &Vec<Object>,
+    env: &mut Rc<RefCell<Env>>,
+) -> Result<Object, String> {
     let lambda = env.borrow_mut().get(symbol);
     if lambda.is_none() {
         return Err(format!("Unbound symbol: {}", symbol));
@@ -164,16 +168,16 @@ fn eval_function_call(symbol: &str, list: &Vec<Object>, env: &mut Rc<RefCell<Env
                 new_env.borrow_mut().set(param, val);
             }
             return eval_obj(&Object::List(body), &mut new_env);
-        },
+        }
         _ => return Err(format!("Not a lambda: {}", symbol)),
     }
 }
 
 #[cfg(test)]
 mod test_evaluator {
-    use crate::object::Object;
-    use crate::eval::eval;
     use crate::env::Env;
+    use crate::eval::eval;
+    use crate::object::Object;
     use std::cell::RefCell;
     use std::rc::Rc;
 
@@ -182,5 +186,21 @@ mod test_evaluator {
         let mut env = Rc::new(RefCell::new(Env::new()));
         let result = eval("(+ 1 2)", &mut env).unwrap();
         assert_eq!(result, Object::Integer(3));
+    }
+
+    #[test]
+    fn area_of_a_circle() {
+        let mut env = Rc::new(RefCell::new(Env::new()));
+        let program: &str = "(
+              (define r 10)
+              (define pi 314)
+              (* pi (* r r))
+            )";
+
+        let result = eval(program, &mut env).unwrap();
+        assert_eq!(
+            result,
+            Object::List(vec![Object::Integer((314 * 10 * 10) as isize)])
+        );
     }
 }

@@ -4,11 +4,11 @@ My lisp implementation.
 
 ## TODO list
 
-- [ ] MAKE this main structure, like REPL!!
+- [x] MAKE this main structure, like REPL!!
 - [x] make hexer
 - [x] make parser
-- [ ] make evaluator
-- [ ] make REPL
+- [x] make evaluator
+- [x] make REPL
 - [ ] make standard library written in harulisp
 
 ### command line argments parser
