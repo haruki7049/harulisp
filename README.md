@@ -12,6 +12,8 @@ My lisp implementation.
 - [ ] make standard library written in harulisp
 - [ ] add more operator
 - [ ] add variable's type, this expression is as this, (define i: int 3).
+- [ ] assemble string literal in lexer
+- [ ] assemble string literal in object
 
 ### command line argments parser
 
@@ -28,3 +30,4 @@ My lisp implementation.
 ## Refactoring list
 
 - [x] construct directry structure, as src/object/mod.rs
+- [ ] rename the name which i do not like
