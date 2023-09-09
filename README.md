@@ -21,6 +21,9 @@ My lisp implementation.
 
 - [ ] make harulisp compiler, from harulisp code to native code.
 
+### GUI client
+
+- [ ] add GUI client? Is this really needed?
 
 ## Refactoring list
 
