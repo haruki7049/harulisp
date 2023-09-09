@@ -11,6 +11,7 @@ My lisp implementation.
 - [x] make REPL
 - [ ] make standard library written in harulisp
 - [ ] add more operator
+- [ ] add variable's type, this expression is as this, (define i: int 3).
 
 ### command line argments parser
 
