@@ -10,6 +10,7 @@ My lisp implementation.
 - [x] make evaluator
 - [x] make REPL
 - [ ] make standard library written in harulisp
+- [ ] add more operator
 
 ### command line argments parser
 
