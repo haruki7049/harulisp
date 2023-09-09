@@ -5,7 +5,7 @@ use std::error::Error;
 use std::fmt;
 
 #[derive(Debug)]
-struct ParseError {
+pub struct ParseError {
     err: String,
 }
 
@@ -17,7 +17,7 @@ impl fmt::Display for ParseError {
 
 impl Error for ParseError {}
 
-fn parse(program: &str) -> Result<Object, ParseError> {
+pub fn parse(program: &str) -> Result<Object, ParseError> {
     let token_result = tokenize(program);
     if token_result.is_err() {
         return Err(ParseError {
