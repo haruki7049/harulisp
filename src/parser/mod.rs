@@ -50,6 +50,7 @@ fn parse_list(tokens: &mut Vec<Token>) -> Result<Object, ParseError> {
         let t = token.unwrap();
         match t {
             Token::Integer(number) => list.push(Object::Integer(number)),
+            Token::Float(number) => list.push(Object::Float(number)),
             Token::Symbol(symbol) => list.push(Object::Symbol(symbol)),
             Token::String(string) => list.push(Object::String(string)),
             Token::LParen => {

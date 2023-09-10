@@ -11,6 +11,7 @@ fn eval_obj(object: &Object, env: &mut Rc<RefCell<Env>>) -> Result<Object, Strin
         Object::Bool(_) => Ok(object.clone()),
         Object::String(string) => Ok(Object::String((*string).clone())),
         Object::Integer(n) => Ok(Object::Integer(*n)),
+        Object::Float(number) => Ok(Object::Float(*number)),
         Object::Symbol(s) => eval_symbol(s, env),
         Object::List(list) => eval_list(list, env),
     }
