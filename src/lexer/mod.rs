@@ -4,6 +4,7 @@ use std::fmt;
 #[allow(dead_code)]
 pub enum Token {
     Integer(isize),
+    String(String),
     Symbol(String),
     LParen,
     RParen,
@@ -12,8 +13,9 @@ pub enum Token {
 impl fmt::Display for Token {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            Token::Integer(n) => write!(f, "{}", n),
-            Token::Symbol(s) => write!(f, "{}", s),
+            Token::Integer(number) => write!(f, "{}", number),
+            Token::String(string) => write!(f, "{}", string),
+            Token::Symbol(symbol) => write!(f, "{}", symbol),
             Token::LParen => write!(f, "("),
             Token::RParen => write!(f, ")"),
         }
@@ -31,22 +33,21 @@ impl fmt::Display for TokenError {
     }
 }
 
-pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
-    let p = program.replace("(", " ( ").replace(")", " ) ");
-    let words = p.split_whitespace();
+pub fn tokenize(program: String) -> Result<Vec<Token>, TokenError> {
+    let mut string_literal: Vec<String> = vec![];
+    let splited_program_by_whitespace: String = replace_parenthese_by_whitespace(program);
+    let p: String = replace_quatation_by_whitespace(splited_program_by_whitespace);
+    let words_iter = p.split_whitespace();
     let mut tokens: Vec<Token> = Vec::new();
 
-    for word in words {
+    for word in words_iter {
         match word {
             "(" => tokens.push(Token::LParen),
             ")" => tokens.push(Token::RParen),
             _ => {
-                let i = word.parse::<isize>();
-                if i.is_ok() {
-                    tokens.push(Token::Integer(i.unwrap()));
-                } else {
-                    tokens.push(Token::Symbol(word.to_string()));
+                if word == "\"" || word == "\'" {
                 }
+                tokens.push(check_integer_or_symbol(word.to_string()));
             }
         }
     }
@@ -54,14 +55,66 @@ pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
     Ok(tokens)
 }
 
+fn check_integer_or_symbol(word: String) -> Token {
+    let i = word.parse::<isize>();
+    if i.is_ok() {
+        Token::Integer(i.unwrap())
+    } else {
+        Token::Symbol(word.to_string())
+    }
+}
+
+fn replace_quatation_by_whitespace(program: String) -> String {
+    program.replace("\"", " \" ").replace("\'", " \' ")
+}
+
+fn replace_parenthese_by_whitespace(program: String) -> String {
+    program.replace("(", " ( ").replace(")", " ) ")
+}
+
 #[cfg(test)]
 mod test_lexer {
     use crate::lexer;
+    use crate::lexer::check_integer_or_symbol;
     use crate::lexer::Token;
 
     #[test]
+    fn test_string_token_printing() {
+        let program: String = "hi haruki!".to_string();
+        println!("{}", Token::String(program));
+    }
+
+    #[test]
+    fn test_quatation_literal() {
+        let program: String = "(
+              (define i \"hoge haruki\")
+            )".to_string();
+        let tokens = lexer::tokenize(program).unwrap_or(vec![]);
+
+        assert_eq!(
+            tokens,
+            vec![
+                Token::LParen,
+                Token::LParen,
+                Token::Symbol("define".to_string()),
+                Token::Symbol("i".to_string()),
+                Token::String("hoge haruki".to_string()),
+                Token::RParen,
+                Token::RParen,
+            ]
+        );
+    }
+
+    #[test]
+    fn test_check_integer() {
+        let word: String = "haruki".to_string();
+        let token: Token = check_integer_or_symbol(word);
+        assert_eq!(token, Token::Symbol("haruki".to_string()));
+    }
+
+    #[test]
     fn test_add() {
-        let tokens = lexer::tokenize("(+ 1 2)").unwrap_or(vec![]);
+        let tokens = lexer::tokenize("(+ 1 2)".to_string()).unwrap_or(vec![]);
 
         assert_eq!(
             tokens,
@@ -77,13 +130,13 @@ mod test_lexer {
 
     #[test]
     fn test_area_of_a_circle() {
-        let program: &str = "
+        let program: String = "
         (
           (define r 10)
           (define pi 314)
           (* pi (* r r))
         )
-        ";
+        ".to_string();
         let tokens = lexer::tokenize(program).unwrap_or(vec![]);
 
         assert_eq!(

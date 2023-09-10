@@ -17,7 +17,7 @@ impl fmt::Display for ParseError {
 
 impl Error for ParseError {}
 
-pub fn parse(program: &str) -> Result<Object, ParseError> {
+pub fn parse(program: String) -> Result<Object, ParseError> {
     let token_result = tokenize(program);
     if token_result.is_err() {
         return Err(ParseError {
@@ -49,8 +49,9 @@ fn parse_list(tokens: &mut Vec<Token>) -> Result<Object, ParseError> {
 
         let t = token.unwrap();
         match t {
-            Token::Integer(n) => list.push(Object::Integer(n)),
-            Token::Symbol(s) => list.push(Object::Symbol(s)),
+            Token::Integer(number) => list.push(Object::Integer(number)),
+            Token::Symbol(symbol) => list.push(Object::Symbol(symbol)),
+            Token::String(string) => list.push(Object::String(string)),
             Token::LParen => {
                 tokens.push(Token::LParen);
                 let sub_list = parse_list(tokens)?;
@@ -72,7 +73,7 @@ mod test_parser {
 
     #[test]
     fn test_parse() {
-        let list = parse("(+ 1 2)").unwrap();
+        let list = parse("(+ 1 2)".to_string()).unwrap();
         assert_eq!(
             list,
             Object::List(vec![
@@ -90,7 +91,7 @@ mod test_parser {
             (define pi 314)
             (* pi (* r r))
             )";
-        let list = parse(program).unwrap();
+        let list = parse(program.to_string()).unwrap();
         assert_eq!(
             list,
             Object::List(vec![

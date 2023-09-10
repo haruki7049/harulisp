@@ -9,6 +9,7 @@ fn eval_obj(object: &Object, env: &mut Rc<RefCell<Env>>) -> Result<Object, Strin
         Object::Void => Ok(Object::Void),
         Object::Lambda(_param, _body) => Ok(Object::Void),
         Object::Bool(_) => Ok(object.clone()),
+        Object::String(string) => Ok(Object::String((*string).clone())),
         Object::Integer(n) => Ok(Object::Integer(*n)),
         Object::Symbol(s) => eval_symbol(s, env),
         Object::List(list) => eval_list(list, env),
@@ -52,7 +53,7 @@ fn eval_list(list: &Vec<Object>, env: &mut Rc<RefCell<Env>>) -> Result<Object, S
 
 /// eval function, needed &str of program and... what is env?
 pub fn eval(program: &str, env: &mut Rc<RefCell<Env>>) -> Result<Object, String> {
-    let parsed_list = parser::parse(program);
+    let parsed_list = parser::parse(program.to_string());
     if parsed_list.is_err() {
         return Err(format!("{}", parsed_list.err().unwrap()));
     }
