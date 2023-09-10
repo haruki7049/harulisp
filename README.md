@@ -16,6 +16,7 @@ My lisp implementation.
 - [ ] assemble string literal in object
 - [ ] assemble variable's float type
 - [ ] write auto test for new function in lexer
+- [ ] create number trait, as able to plus and minus
 
 ### command line argments parser
 

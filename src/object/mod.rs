@@ -4,6 +4,7 @@ use std::fmt;
 pub enum Object {
     Void,
     Integer(isize),
+    Float(f64),
     Bool(bool),
     Symbol(String),
     String(String),
@@ -16,6 +17,7 @@ impl fmt::Display for Object {
         match self {
             Object::Void => write!(f, "Void"),
             Object::Integer(number) => write!(f, "{}", number),
+            Object::Float(number) => write!(f, "{}", number),
             Object::Bool(boolean) => write!(f, "{}", boolean),
             Object::Symbol(symbol) => write!(f, "{}", symbol),
             Object::String(string) => write!(f, "{}", string),

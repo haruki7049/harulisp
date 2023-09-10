@@ -4,6 +4,7 @@ use std::fmt;
 #[allow(dead_code)]
 pub enum Token {
     Integer(isize),
+    Float(f64),
     String(String),
     Symbol(String),
     LParen,
@@ -14,6 +15,7 @@ impl fmt::Display for Token {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             Token::Integer(number) => write!(f, "{}", number),
+            Token::Float(number) => write!(f, "{}", number),
             Token::String(string) => write!(f, "{}", string),
             Token::Symbol(symbol) => write!(f, "{}", symbol),
             Token::LParen => write!(f, "("),
@@ -47,7 +49,7 @@ pub fn tokenize(program: String) -> Result<Vec<Token>, TokenError> {
             _ => {
                 if word == "\"" || word == "\'" {
                 }
-                tokens.push(check_integer_or_symbol(word.to_string()));
+                tokens.push(check_number_or_symbol(word.to_string()));
             }
         }
     }
@@ -55,12 +57,17 @@ pub fn tokenize(program: String) -> Result<Vec<Token>, TokenError> {
     Ok(tokens)
 }
 
-fn check_integer_or_symbol(word: String) -> Token {
+fn check_number_or_symbol(word: String) -> Token {
     let i = word.parse::<isize>();
     if i.is_ok() {
         Token::Integer(i.unwrap())
     } else {
-        Token::Symbol(word.to_string())
+        let f = word.parse::<f64>();
+        if f.is_ok() {
+            Token::Float(f.unwrap())
+        } else {
+            Token::Symbol(word.to_string())
+        }
     }
 }
 
@@ -75,8 +82,32 @@ fn replace_parenthese_by_whitespace(program: String) -> String {
 #[cfg(test)]
 mod test_lexer {
     use crate::lexer;
-    use crate::lexer::check_integer_or_symbol;
+    use crate::lexer::tokenize;
+    use crate::lexer::check_number_or_symbol;
     use crate::lexer::Token;
+
+    #[test]
+    fn test_float_token() {
+        let program: String = "(
+              (define i 3.0)
+            )".to_string();
+        let tokens: Vec<Token> = tokenize(program).unwrap_or(vec![]);
+
+        assert_eq!(
+            tokens,
+            vec![
+                Token::LParen,
+
+                Token::LParen,
+                Token::Symbol("define".to_string()),
+                Token::Symbol("i".to_string()),
+                Token::Float(3.0),
+                Token::RParen,
+
+                Token::RParen,
+            ]
+        );
+    }
 
     #[test]
     fn test_string_token_printing() {
@@ -89,7 +120,7 @@ mod test_lexer {
         let program: String = "(
               (define i \"hoge haruki\")
             )".to_string();
-        let tokens = lexer::tokenize(program).unwrap_or(vec![]);
+        let tokens = tokenize(program).unwrap_or(vec![]);
 
         assert_eq!(
             tokens,
@@ -108,7 +139,7 @@ mod test_lexer {
     #[test]
     fn test_check_integer() {
         let word: String = "haruki".to_string();
-        let token: Token = check_integer_or_symbol(word);
+        let token: Token = check_number_or_symbol(word);
         assert_eq!(token, Token::Symbol("haruki".to_string()));
     }
 
