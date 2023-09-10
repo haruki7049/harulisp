@@ -14,6 +14,7 @@ My lisp implementation.
 - [ ] add variable's type, this expression is as this, (define i: int 3).
 - [ ] assemble string literal in lexer
 - [ ] assemble string literal in object
+- [ ] write auto test for new function in lexer
 
 ### command line argments parser
 
