@@ -11,13 +11,14 @@ My lisp implementation.
 - [x] make REPL
 - [ ] make standard library written in harulisp
 - [ ] add more operator
+- [ ] do anything for src/eval/mod.rs, 33:13, which has many operator.
 - [ ] add variable's type, this expression is as this, (define i: int 3).
 - [ ] assemble string literal in lexer
 - [ ] assemble string literal in object
 - [ ] assemble variable's float type
 - [ ] write auto test for new function in lexer
 - [ ] create number trait, as able to plus and minus
-- [ ] the problem, (3.0) print as (3) in repl.
+- [ ] the problem, (3.0) print as (3) in repl. SO DIFFICULT because I cannot understand the reason.
 
 ### command line argments parser
 
