@@ -34,3 +34,7 @@ My lisp implementation.
 
 - [x] construct directry structure, as src/object/mod.rs
 - [ ] rename the name which i do not like
+
+## Idea
+
+- [ ] this is OK? "NO Implicit type conversion"
