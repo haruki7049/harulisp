@@ -6,6 +6,7 @@ pub enum Object {
     Integer(isize),
     Bool(bool),
     Symbol(String),
+    String(String),
     Lambda(Vec<String>, Vec<Object>),
     List(Vec<Object>),
 }
@@ -14,9 +15,10 @@ impl fmt::Display for Object {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             Object::Void => write!(f, "Void"),
-            Object::Integer(n) => write!(f, "{}", n),
-            Object::Bool(b) => write!(f, "{}", b),
-            Object::Symbol(s) => write!(f, "{}", s),
+            Object::Integer(number) => write!(f, "{}", number),
+            Object::Bool(boolean) => write!(f, "{}", boolean),
+            Object::Symbol(symbol) => write!(f, "{}", symbol),
+            Object::String(string) => write!(f, "{}", string),
             Object::Lambda(parameters, body) => {
                 write!(f, "Lambda(")?;
                 for parameter in parameters {
