@@ -17,6 +17,7 @@ My lisp implementation.
 - [ ] assemble variable's float type
 - [ ] write auto test for new function in lexer
 - [ ] create number trait, as able to plus and minus
+- [ ] the problem, (3.0) print as (3) in repl.
 
 ### command line argments parser
 
