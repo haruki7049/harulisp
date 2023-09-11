@@ -39,6 +39,7 @@ My lisp implementation.
 - [x] construct directry structure, as src/object/mod.rs
 - [ ] rename the name which i do not like
 - [ ] create constant for the &str in src/eval/mod.rs in test named test-simple-add
+- [ ] rewrite test, Setup Exercise Verify. as in src\lexer\mod.rs 112:5, src/object/mod.rs 57:5
 
 ## Idea
 
