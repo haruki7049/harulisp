@@ -12,13 +12,15 @@ My lisp implementation.
 - [ ] make standard library written in harulisp
 - [ ] add more operator
 - [ ] do anything for src/eval/mod.rs, 33:13, which has many operator.
-- [ ] add variable's type, this expression is as this, (define i: int 3).
+- [ ] add variable's type, this expression is as this, (define i: int 3). this probably can implement as Object::Symbol(Keyword::Type(String))
 - [ ] assemble string literal in lexer
 - [ ] assemble string literal in object
 - [ ] assemble variable's float type
 - [ ] write auto test for new function in lexer
 - [ ] create number trait, as able to plus and minus
 - [ ] the problem, (3.0) print as (3) in repl. SO DIFFICULT because I cannot understand the reason.
+- [ ] add Number enum and set as Object::Number(Number::Float(3.0)), in src/object/mod.rs
+- [ ] add Keyword enum and set as Object::Symbol(Keyword::AssembledFunction(String))
 
 ### command line argments parser
 
@@ -36,6 +38,7 @@ My lisp implementation.
 
 - [x] construct directry structure, as src/object/mod.rs
 - [ ] rename the name which i do not like
+- [ ] create constant for the &str in src/eval/mod.rs in test named test-simple-add
 
 ## Idea
 
