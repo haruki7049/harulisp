@@ -110,12 +110,6 @@ mod test_lexer {
     }
 
     #[test]
-    fn test_string_token_printing() {
-        let program: String = "hi haruki!".to_string();
-        println!("{}", Token::String(program));
-    }
-
-    #[test]
     fn test_quatation_literal() {
         let program: String = "(
               (define i \"hoge haruki\")
