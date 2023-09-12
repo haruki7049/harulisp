@@ -40,6 +40,7 @@ My lisp implementation.
 - [ ] rename the name which i do not like
 - [x] create constant for the &str in src/eval/mod.rs in test named test-simple-add
 - [x] rewrite test, Setup Exercise Verify. as in src\lexer\mod.rs 112:5, src/object/mod.rs 57:5
+- [ ] remove src/input module
 
 ## Idea
 
