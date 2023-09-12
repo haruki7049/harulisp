@@ -186,7 +186,9 @@ mod test_evaluator {
     #[test]
     fn simple_add() {
         let mut env = Rc::new(RefCell::new(Env::new()));
-        let result = eval("(+ 1 2)", &mut env).unwrap();
+        const PROGRAM: &str = "(+ 1 2)";
+        let result: Object = eval(PROGRAM, &mut env).unwrap();
+
         assert_eq!(result, Object::Integer(3));
     }
 
