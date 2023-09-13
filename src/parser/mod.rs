@@ -69,7 +69,7 @@ fn parse_list(tokens: &mut Vec<Token>) -> Result<Object, ParseError> {
 
 #[cfg(test)]
 mod test_parser {
-    use crate::object::Object;
+    use crate::keywords::object::Object;
     use crate::parser::parse;
 
     #[test]
