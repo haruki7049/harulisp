@@ -1,7 +1,7 @@
 use crate::keywords::object::Object;
 use std::cell::RefCell;
-use std::rc::Rc;
 use std::collections::HashMap;
+use std::rc::Rc;
 
 #[derive(Default)]
 pub struct Env {
@@ -24,7 +24,8 @@ impl Env {
     pub fn get(&self, name: &str) -> Option<Object> {
         match self.vars.get(name) {
             Some(value) => Some(value.clone()),
-            None => self.parent
+            None => self
+                .parent
                 .as_ref()
                 .and_then(|o| o.borrow().get(name).clone()),
         }

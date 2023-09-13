@@ -1,9 +1,8 @@
-use std::env;
 use clap;
 use clap::Subcommand;
+use std::env;
 
-fn main() {
-}
+fn main() {}
 
 //#[derive(Subcommand, Debug)]
 //#[command(name = env!("CARGO_PKG_AUTHORS"), author = env!("CARGO_PKG_AUTHORS"), version = env!("CARGO_PKG_AUTHORS"), about = env!("CARGO_PKG_AUTHORS"), long_about = None)]

@@ -1,6 +1,6 @@
-use crate::lexer::tokenize;
-use crate::keywords::token::Token;
 use crate::keywords::object::Object;
+use crate::keywords::token::Token;
+use crate::lexer::tokenize;
 use std::error::Error;
 use std::fmt;
 

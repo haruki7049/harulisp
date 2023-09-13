@@ -1,6 +1,6 @@
-pub mod keywords;
+pub mod env;
+pub mod eval;
 mod input;
+pub mod keywords;
 mod lexer;
 mod parser;
-pub mod eval;
-pub mod env;

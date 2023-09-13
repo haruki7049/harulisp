@@ -13,8 +13,7 @@ pub fn tokenize(program: String) -> Result<Vec<Token>, TokenError> {
             "(" => tokens.push(Token::LParen),
             ")" => tokens.push(Token::RParen),
             _ => {
-                if word == "\"" || word == "\'" {
-                }
+                if word == "\"" || word == "\'" {}
                 tokens.push(check_number_or_symbol(word.to_string()));
             }
         }
@@ -48,28 +47,27 @@ fn replace_parenthese_by_whitespace(program: String) -> String {
 #[cfg(test)]
 mod test_lexer {
     use crate::lexer;
-    use crate::lexer::tokenize;
     use crate::lexer::check_number_or_symbol;
+    use crate::lexer::tokenize;
     use crate::lexer::Token;
 
     #[test]
     fn test_float_token() {
         let program: String = "(
               (define i 3.0)
-            )".to_string();
+            )"
+        .to_string();
         let tokens: Vec<Token> = tokenize(program).unwrap_or(vec![]);
 
         assert_eq!(
             tokens,
             vec![
                 Token::LParen,
-
                 Token::LParen,
                 Token::Symbol("define".to_string()),
                 Token::Symbol("i".to_string()),
                 Token::Float(3.0),
                 Token::RParen,
-
                 Token::RParen,
             ]
         );
@@ -79,7 +77,8 @@ mod test_lexer {
     fn test_quatation_literal() {
         let program: String = "(
               (define i \"hoge haruki\")
-            )".to_string();
+            )"
+        .to_string();
         let tokens = tokenize(program).unwrap_or(vec![]);
 
         assert_eq!(
@@ -130,7 +129,8 @@ mod test_lexer {
           (define pi 314)
           (* pi (* r r))
         )
-        ".to_string();
+        "
+        .to_string();
         let tokens = lexer::tokenize(program).unwrap_or(vec![]);
 
         assert_eq!(

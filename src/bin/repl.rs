@@ -6,12 +6,12 @@ use harulisp::keywords::object::Object;
 use linefeed::Interface;
 use linefeed::ReadResult;
 
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 
 const PROMPT: &str = "harulisp:> ";
 
-fn main() -> Result<(), Box<dyn std::error::Error>>{
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let reader = Interface::new(PROMPT).unwrap();
     let mut env = Rc::new(RefCell::new(Env::new()));
 
@@ -24,7 +24,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>>{
 
         let value = eval(input.as_ref(), &mut env)?;
         match value {
-            Object::Void => {},
+            Object::Void => {}
             Object::Integer(n) => println!("{}", n),
             Object::Bool(b) => println!("{}", b),
             Object::Symbol(s) => println!("{}", s),
@@ -38,7 +38,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>>{
                 for expression in body {
                     println!(" {}", expression);
                 }
-            },
+            }
             _ => println!("{}", value),
         }
     }
