@@ -1,39 +1,5 @@
-use std::fmt;
-
-#[derive(Debug, PartialEq)]
-#[allow(dead_code)]
-pub enum Token {
-    Integer(isize),
-    Float(f64),
-    String(String),
-    Symbol(String),
-    LParen,
-    RParen,
-}
-
-impl fmt::Display for Token {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Token::Integer(number) => write!(f, "{}", number),
-            Token::Float(number) => write!(f, "{}", number),
-            Token::String(string) => write!(f, "{}", string),
-            Token::Symbol(symbol) => write!(f, "{}", symbol),
-            Token::LParen => write!(f, "("),
-            Token::RParen => write!(f, ")"),
-        }
-    }
-}
-
-#[derive(Debug)]
-pub struct TokenError {
-    ch: char,
-}
-
-impl fmt::Display for TokenError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "unexpected character: {}", self.ch)
-    }
-}
+use crate::keywords::token::Token;
+use crate::keywords::token::TokenError;
 
 pub fn tokenize(program: String) -> Result<Vec<Token>, TokenError> {
     let mut string_literal: Vec<String> = vec![];

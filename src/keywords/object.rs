@@ -1,5 +1,3 @@
-use std::fmt;
-
 #[derive(Debug, Clone, PartialEq)]
 pub enum Object {
     Void,
@@ -12,8 +10,8 @@ pub enum Object {
     List(Vec<Object>),
 }
 
-impl fmt::Display for Object {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+impl std::fmt::Display for Object {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
             Object::Void => write!(f, "Void"),
             Object::Integer(number) => write!(f, "{}", number),
