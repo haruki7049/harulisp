@@ -1,4 +1,4 @@
-pub mod object;
+pub mod keywords;
 mod input;
 mod lexer;
 mod parser;

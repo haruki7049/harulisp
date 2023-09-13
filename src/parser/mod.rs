@@ -1,6 +1,6 @@
 use crate::lexer::tokenize;
-use crate::lexer::Token;
-use crate::object::Object;
+use crate::keywords::token::Token;
+use crate::keywords::object::Object;
 use std::error::Error;
 use std::fmt;
 
@@ -69,7 +69,7 @@ fn parse_list(tokens: &mut Vec<Token>) -> Result<Object, ParseError> {
 
 #[cfg(test)]
 mod test_parser {
-    use crate::object::Object;
+    use crate::keywords::object::Object;
     use crate::parser::parse;
 
     #[test]

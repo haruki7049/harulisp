@@ -1,7 +1,7 @@
 extern crate harulisp;
 use harulisp::env::Env;
 use harulisp::eval::eval;
-use harulisp::object::Object;
+use harulisp::keywords::object::Object;
 
 use linefeed::Interface;
 use linefeed::ReadResult;
