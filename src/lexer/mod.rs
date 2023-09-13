@@ -89,7 +89,10 @@ mod test_lexer {
                 Token::LParen,
                 Token::Symbol("define".to_string()),
                 Token::Symbol("i".to_string()),
-                Token::String("hoge haruki".to_string()),
+                Token::Symbol("\"".to_string()),
+                Token::Symbol("hoge".to_string()),
+                Token::Symbol("haruki".to_string()),
+                Token::Symbol("\"".to_string()),
                 Token::RParen,
                 Token::RParen,
             ]
