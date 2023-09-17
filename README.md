@@ -25,17 +25,17 @@ Purpose of this repo is to create my original LISP implementation. this project 
 
 The below commands requires 2 arguments which must be integer or float, and return number
 
-- + (addition)
-- - (substruction)
-- * (multiplication)
-- / (division)
+- plus( + ) (addition)
+- minus( - ) (substruction)
+- asterisk( * ) (multiplication)
+- slash( / ) (division)
 
 The below commands requires 2 arguments which must not be List and lambda, and return boolean
 
-- < (if left argument is greater than right argument, this S-expression return true)
-- > (if right argument is greater than left argument, this S-expression return true)
-- = (if left argument is equal to right argument, this S-expression return true)
-- != (if left argument is not equal to right argument, this S-expression return true)
+- shorter( < ) (if right argument is greater than left argument, this S-expression return true)
+- greater( > ) (if left argument is greater than right argument, this S-expression return true)
+- equal( = ) (if left argument is equal to right argument, this S-expression return true)
+- not_equal( != ) (if left argument is not equal to right argument, this S-expression return true)
 
 ## Data type
 
@@ -46,6 +46,6 @@ The below commands requires 2 arguments which must not be List and lambda, and r
 - boolean
 - string
 
-## TODO list
+# TODO list
 
 - [ ] write anything in this TODO list
