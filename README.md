@@ -46,6 +46,11 @@ The below commands requires 2 arguments which must not be List and lambda, and r
 - boolean
 - string
 
+## structure of rust module
+
+- src/data (contains some data, which is Token, Commands and Object)
+- src/lexer (contains lexer, which is to convert from string literal to Token)
+
 # TODO list
 
 - [ ] write anything in this TODO list
