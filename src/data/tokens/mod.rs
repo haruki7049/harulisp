@@ -17,8 +17,10 @@ pub enum Token {
 
 #[derive(Debug)]
 pub struct TokenError {
-    char: char,
+    pub char: char,
 }
+
+pub enum Alfabet {}
 
 /// Display implementation of Token.
 impl std::fmt::Display for Token {

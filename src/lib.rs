@@ -41,7 +41,7 @@
 //! - integer
 //! - float
 //! - boolean
-//! - string
+//! - string (this must be shorter alfabet, or underbar.)
 //!
 //! # structure of rust module
 //!
