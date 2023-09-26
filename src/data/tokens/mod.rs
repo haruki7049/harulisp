@@ -9,7 +9,6 @@
 pub enum Token {
     LParen,
     RParen,
-    StringQuotation,
     Integer(isize),
     Float(f64),
     String(String),
@@ -28,7 +27,6 @@ impl std::fmt::Display for Token {
         match self {
             Token::LParen => write!(f, "("),
             Token::RParen => write!(f, ")"),
-            Token::StringQuotation => write!(f, "\""),
             Token::Integer(integer) => write!(f, "{}", integer),
             Token::Float(float) => write!(f, "{}", float),
             Token::String(string) => write!(f, "{}", string),

@@ -6,12 +6,9 @@ pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
     // ")" の片端にスペースを追加
     let p: &str = &program.replace(")", " )");
 
-    // '\'' と '\"' の
-
     let program_vector: Vec<char> = make_vector_char(p);
     let mut tokens: Vec<Token> = vec![];
 
-    //
     let words: Vec<String> = wordnize(&program_vector);
 
     for term in words {
@@ -20,7 +17,7 @@ pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
         match t {
             "(" => tokens.push(Token::LParen),
             ")" => tokens.push(Token::RParen),
-            "\'" | "\"" => tokens.push(Token::StringQuotation),
+            "\'" | "\"" => {}
             _ => {
                 let i = t.parse::<isize>();
                 if i.is_ok() {
@@ -43,10 +40,12 @@ pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
     Ok(tokens)
 }
 
+/// convert string literal to Vec<char>
 fn make_vector_char(str: &str) -> Vec<char> {
     str.chars().collect()
 }
 
+/// making word, Vector of String.
 fn wordnize(program_vector: &Vec<char>) -> Vec<String> {
     let mut result: _ = vec![];
     let mut word: Vec<char> = vec![];
@@ -139,9 +138,7 @@ mod test_lexer {
                 Token::LParen,
                 Token::String("define".to_string()),
                 Token::String("sample_string".to_string()),
-                Token::StringQuotation,
                 Token::String("hoge fuga".to_string()),
-                Token::StringQuotation,
                 Token::RParen,
             ]
         );
