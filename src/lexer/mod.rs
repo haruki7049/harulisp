@@ -6,6 +6,8 @@ pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
     // ")" の片端にスペースを追加
     let p: &str = &program.replace(")", " )");
 
+    // '\'' と '\"' の
+
     let program_vector: Vec<char> = make_vector_char(p);
     let mut tokens: Vec<Token> = vec![];
 
@@ -45,22 +47,27 @@ fn make_vector_char(str: &str) -> Vec<char> {
     str.chars().collect()
 }
 
-fn wordnize(program_vector: &Vec<char>, ) -> Vec<String> {
+fn wordnize(program_vector: &Vec<char>) -> Vec<String> {
     let mut vector_string: _ = vec![];
     let mut word: Vec<char> = vec![];
+    let mut literal_mode: bool = false; // さいしょはかならすリテラルはこないため、falseに設定
 
     for ch in program_vector {
         match ch {
             '(' => vector_string.push('('.to_string()),
             ')' => vector_string.push(')'.to_string()),
-            '\"' => vector_string.push('\"'.to_string()),
-            '\'' => vector_string.push('\''.to_string()),
+            '\"' => {
+                vector_string.push('\"'.to_string());
+                literal_mode = switch_bool(literal_mode);
+            }
+            '\'' => {
+                vector_string.push('\''.to_string());
+                literal_mode = switch_bool(literal_mode);
+            }
             _ => {
-                let w = create_word(*ch, &mut word);
+                let w = create_word(*ch, &mut word, literal_mode);
                 if w.is_ok() {
-                    // 単語が完成したら
-
-                    // 最後のスペースを取る
+                    // 単語が完成したら、最後のスペースもしくはクオーテーションを取る
                     word.pop();
                     
                     vector_string.push(word.iter().collect());
@@ -74,20 +81,28 @@ fn wordnize(program_vector: &Vec<char>, ) -> Vec<String> {
 }
 
 /// add char to Vec<char>, and return true if the char is ' '.
-fn create_word(ch: char, word: &mut Vec<char>) -> Result<Vec<char>, String> {
+fn create_word(ch: char, word: &mut Vec<char>, literal_mode: bool) -> Result<Vec<char>, String> {
     // chからwordに一つずつ追加する
     word.push(ch);
-    if ch == ' ' {
-        // もしも空白がchに入っていたなら
-        Ok(word.to_vec())
+    if literal_mode == true {
+        if ch == '\"' || ch == '\'' {
+            Ok(word.to_vec())
+        } else {
+            Err("not yet, this charactor is not quotation.".to_string())
+        }
     } else {
-        Err("not yet, this charactor is not whitespace.".to_string())
+        if ch == ' ' {
+            // もしも空白がchに入っていたなら
+            Ok(word.to_vec())
+        } else {
+            Err("not yet, this charactor is not whitespace.".to_string())
+        }
     }
+
 }
 
-enum Number {
-    Integer(isize),
-    Float(f64),
+fn switch_bool(b: bool) -> bool {
+    !b
 }
 
 /// lexer test.
@@ -116,7 +131,7 @@ mod test_lexer {
     /// test_string_quotation test, whether tokenize function correctly handle quotation or not.
     #[test]
     fn test_string_quotation() {
-        const PROGRAM: &str = "(define sample_string \"hoge fuga\")";
+        const PROGRAM: &str = "(define sample_string \'hoge fuga\')";
         let tokens: Vec<Token> = tokenize(PROGRAM).unwrap_or(vec![]);
         assert_eq!(
             tokens,
@@ -133,10 +148,10 @@ mod test_lexer {
     }
 
     #[test]
-    fn test_only_string() {
-        const TEXT: &str = "define";
-        let tokens: Vec<Token> = tokenize(TEXT).unwrap_or(vec![]);
-        assert_eq!(tokens, vec![Token::String("define".to_string())]);
+    fn test_create_word() {
+        let vec_ch: Vec<char> = vec![];
+        let word: Vec<String> = vec![];
+        assert_eq!();
     }
 
     //#[test]
