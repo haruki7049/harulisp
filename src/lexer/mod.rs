@@ -48,20 +48,20 @@ fn make_vector_char(str: &str) -> Vec<char> {
 }
 
 fn wordnize(program_vector: &Vec<char>) -> Vec<String> {
-    let mut vector_string: _ = vec![];
+    let mut result: _ = vec![];
     let mut word: Vec<char> = vec![];
     let mut literal_mode: bool = false; // さいしょはかならすリテラルはこないため、falseに設定
 
     for ch in program_vector {
         match ch {
-            '(' => vector_string.push('('.to_string()),
-            ')' => vector_string.push(')'.to_string()),
+            '(' => result.push('('.to_string()),
+            ')' => result.push(')'.to_string()),
             '\"' => {
-                vector_string.push('\"'.to_string());
+                result.push('\"'.to_string());
                 literal_mode = switch_bool(literal_mode);
             }
             '\'' => {
-                vector_string.push('\''.to_string());
+                result.push('\''.to_string());
                 literal_mode = switch_bool(literal_mode);
             }
             _ => {
@@ -70,14 +70,14 @@ fn wordnize(program_vector: &Vec<char>) -> Vec<String> {
                     // 単語が完成したら、最後のスペースもしくはクオーテーションを取る
                     word.pop();
                     
-                    vector_string.push(word.iter().collect());
+                    result.push(word.iter().collect());
                     word = vec![];
                 }
             }
         }
     }
 
-    vector_string
+    result
 }
 
 /// add char to Vec<char>, and return true if the char is ' '.
