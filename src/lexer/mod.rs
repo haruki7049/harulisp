@@ -147,13 +147,6 @@ mod test_lexer {
         );
     }
 
-    #[test]
-    fn test_create_word() {
-        let vec_ch: Vec<char> = vec![];
-        let word: Vec<String> = vec![];
-        assert_eq!();
-    }
-
     //#[test]
     //fn test_string_error() {
     //    const ERROR_PROGRAM: &str = "(Define x 1)";
