@@ -53,3 +53,6 @@ pub mod data;
 
 /// lexer module, contains my original lexer.
 pub mod lexer;
+
+/// parser module, contains my original parser.
+pub mod parser;
