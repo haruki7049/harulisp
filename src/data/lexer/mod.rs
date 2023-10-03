@@ -1,3 +1,0 @@
-struct Lexer {
-    input: char,
-}

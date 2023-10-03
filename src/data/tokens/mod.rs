@@ -5,7 +5,7 @@
 /// - Integer
 /// - Float
 /// - String
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Token {
     LParen,
     RParen,
@@ -38,5 +38,24 @@ impl std::fmt::Display for Token {
 impl std::fmt::Display for TokenError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "unexpected character: {}", self.char)
+    }
+}
+
+impl PartialEq<Token> for &mut Token {
+    fn eq(&self, other: &Token) -> bool {
+        self == other
+    }
+}
+
+impl std::ops::Deref for Token {
+    type Target = Token;
+    fn deref(&self) -> &Self::Target {
+        &self
+    }
+}
+
+impl std::ops::DerefMut for Token {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self
     }
 }
