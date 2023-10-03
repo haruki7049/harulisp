@@ -1,17 +1,18 @@
 use crate::data::objects::Object;
 use crate::data::tokens::Token;
+use crate::data::tokens::TokenError;
 use crate::lexer::tokenize;
 
 pub fn parse(program: &str) -> Result<Object, ParseError> {
-    let token_result = tokenize(program);
+    let token_result: Result<Vec<Token>, TokenError> = tokenize(program);
     if token_result.is_err() {
         return Err(ParseError {
             err: format!("{}", token_result.err().unwrap()),
         });
     }
 
-    let mut tokens = token_result.unwrap().into_iter().rev().collect::<Vec<_>>();
-    let parsed_list = parse_list(&mut tokens)?;
+    let mut tokens: Vec<Token> = token_result.unwrap().into_iter().rev().collect::<Vec<Token>>();
+    let parsed_list: Object = parse_list(&mut tokens)?;
     Ok(parsed_list)
 }
 
