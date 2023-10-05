@@ -46,7 +46,9 @@
 //! # structure of rust module
 //!
 //! - src/data (contains some data, which is Token, Commands and Object)
-//! - src/lexer (contains lexer, which is to convert from string literal to Token)
+//! - src/lexer (contains lexer, which is used to convert from string literal to Token)
+//! - src/parser (contains parser, which is used to convert from Token to Object)
+//! - src/evaluator (contains evaluator, which is used to convert from Object to Rust-lang's RAW process)
 
 /// data module, contains the data which is used by lexer, parser and evaluator.
 pub mod data;
@@ -56,3 +58,6 @@ pub mod lexer;
 
 /// parser module, contains my original parser.
 pub mod parser;
+
+/// evaluator module, contains my original evaluator.
+pub mod evaluator;
