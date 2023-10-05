@@ -1,8 +1,27 @@
-use crate::data::objects::Object;
+use crate::data::objects::{
+    Object,
+    Symbol,
+    Operator,
+    Comparison,
+};
+use crate::data::objects::{
+    DEFINE,
+    IF,
+    LAMBDA,
+    PLUS,
+    MINUS,
+    ASTERISK,
+    SLASH,
+    SHORTER,
+    GREATER,
+    EQUAL,
+    NOT_EQUAL,
+};
 use crate::data::tokens::Token;
 use crate::data::tokens::TokenError;
 use crate::lexer::tokenize;
 
+/// parse function, return Result<Object, ParseError>
 pub fn parse(program: &str) -> Result<Object, ParseError> {
     let token_result: Result<Vec<Token>, TokenError> = tokenize(program);
     if token_result.is_err() {
@@ -37,7 +56,7 @@ fn parse_list(tokens_vec: &mut Vec<Token>) -> Result<Object, ParseError> {
         match t {
             Token::Integer(integer) => list.push(Object::Integer(integer)),
             Token::Float(float) => list.push(Object::Float(float)),
-            Token::String(string) => list.push(Object::String(string)),
+            Token::String(string) => list.push(parse_string(string)),
             Token::LParen => {
                 tokens_vec.push(Token::LParen);
                 let sub_list = parse_list(tokens_vec)?;
@@ -50,6 +69,26 @@ fn parse_list(tokens_vec: &mut Vec<Token>) -> Result<Object, ParseError> {
     }
 
     Ok(Object::List(list))
+}
+
+fn parse_string(string: String) -> Object {
+    match &string[..] {
+        DEFINE => Object::Symbol(Symbol::Define),
+        IF => Object::Symbol(Symbol::If),
+        LAMBDA => Object::Symbol(Symbol::Lambda),
+
+        PLUS => Object::Symbol(Symbol::Operator(Operator::Plus)),
+        MINUS => Object::Symbol(Symbol::Operator(Operator::Minus)),
+        ASTERISK => Object::Symbol(Symbol::Operator(Operator::Plus)),
+        SLASH => Object::Symbol(Symbol::Operator(Operator::Plus)),
+        
+        SHORTER => Object::Symbol(Symbol::Comparison(Comparison::Shorter)),
+        GREATER => Object::Symbol(Symbol::Comparison(Comparison::Greater)),
+        EQUAL => Object::Symbol(Symbol::Comparison(Comparison::Equal)),
+        NOT_EQUAL => Object::Symbol(Symbol::Comparison(Comparison::NotEqual)),
+        
+        _ => Object::String(string),
+    }
 }
 
 #[derive(Debug)]
@@ -65,9 +104,14 @@ impl std::fmt::Display for ParseError {
     }
 }
 
+/// Parser test
 #[cfg(test)]
 mod test {
-    use crate::data::objects::Object;
+    use crate::data::objects::{
+        Object,
+        Symbol,
+        Operator,
+    };
     use crate::parser::parse;
 
     #[test]
@@ -77,7 +121,7 @@ mod test {
         assert_eq!(
             list,
             Object::List(vec![
-                Object::String("+".to_string()),
+                Object::Symbol(Symbol::Operator(Operator::Plus)),
                 Object::Integer(1),
                 Object::Integer(2),
             ])
@@ -96,17 +140,17 @@ mod test {
             list,
             Object::List(vec![
                 Object::List(vec![
-                    Object::String("define".to_string()),
+                    Object::Symbol(Symbol::Define),
                     Object::String("x".to_string()),
                     Object::Integer(12),
                 ]),
                 Object::List(vec![
-                    Object::String("define".to_string()),
+                    Object::Symbol(Symbol::Define),
                     Object::String("y".to_string()),
                     Object::Integer(3),
                 ]),
                 Object::List(vec![
-                    Object::String("+".to_string()),
+                    Object::Symbol(Symbol::Operator(Operator::Plus)),
                     Object::String("x".to_string()),
                     Object::String("y".to_string()),
                 ]),
@@ -114,16 +158,17 @@ mod test {
         );
     }
 
+    /// capital character test, whether this process is correctly run or not. the program is mixed CAPITAL charactor in define, as DeFinE.
     #[test]
     fn test_capital_character() {
         const PROGRAM: &str = "(
-          (Define x 23)
+          (DeFinE x 23)
         )";
         let list = parse(PROGRAM).unwrap();
         assert_eq!(
             list,
             Object::List(vec![Object::List(vec![
-                Object::String("Define".to_string()),
+                Object::String("DeFinE".to_string()),
                 Object::String("x".to_string()),
                 Object::Integer(23),
             ])])
