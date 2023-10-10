@@ -12,7 +12,7 @@ pub const GREATER: &str = ">";
 pub const EQUAL: &str = "=";
 pub const NOT_EQUAL: &str = "!=";
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Object {
     Void,
     Integer(isize),
@@ -24,7 +24,7 @@ pub enum Object {
     Lambda(Vec<String>, Vec<Object>),
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Symbol {
     Define,
     If,
@@ -33,7 +33,7 @@ pub enum Symbol {
     Comparison(Comparison),
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Operator {
     Plus,
     Minus,
@@ -41,7 +41,7 @@ pub enum Operator {
     Slash,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Comparison {
     Shorter,
     Greater,
