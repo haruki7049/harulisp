@@ -134,6 +134,7 @@ mod test_lexer {
         );
     }
 
+    /// test_new_line test, whether tokenize function ignore new_line and space indent or not.
     #[test]
     fn test_new_line() {
         const PROGRAM: &str = "(
