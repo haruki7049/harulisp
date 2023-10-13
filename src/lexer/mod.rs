@@ -69,12 +69,12 @@ fn wordnize(program_vector: &Vec<char>) -> Vec<String> {
             '\"' => {
                 // double quotation
                 result.push('\"'.to_string());
-                literal_mode = switch_bool(literal_mode);
+                literal_mode = !literal_mode;
             }
             '\'' => {
                 // single quotation
                 result.push('\''.to_string());
-                literal_mode = switch_bool(literal_mode);
+                literal_mode = !literal_mode;
             }
             '\n' => {} // new_line
             _ => {
@@ -109,10 +109,6 @@ fn create_word(ch: char, word: &mut Vec<char>, literal_mode: bool) -> Result<Vec
     } else {
         Err("not yet, this charactor is not whitespace.".to_string())
     }
-}
-
-fn switch_bool(b: bool) -> bool {
-    !b
 }
 
 /// lexer test.
