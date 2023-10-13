@@ -21,7 +21,7 @@ use crate::data::tokens::Token;
 use crate::data::tokens::TokenError;
 use crate::lexer::tokenize;
 
-/// parse function, return Result<Object, ParseError>
+/// parse function, return Result<Object, ParseError>.
 pub fn parse(program: &str) -> Result<Object, ParseError> {
     let token_result: Result<Vec<Token>, TokenError> = tokenize(program);
     if token_result.is_err() {
@@ -35,6 +35,7 @@ pub fn parse(program: &str) -> Result<Object, ParseError> {
     Ok(parsed_list)
 }
 
+/// parse token's vector to Object, if this failed return Err(ParseError).
 fn parse_list(tokens_vec: &mut Vec<Token>) -> Result<Object, ParseError> {
     let t = tokens_vec.pop();
     if t != Some(Token::LParen) {
@@ -71,6 +72,7 @@ fn parse_list(tokens_vec: &mut Vec<Token>) -> Result<Object, ParseError> {
     Ok(Object::List(list))
 }
 
+/// parse String to Object, if there is no symbol return Raw string wrapped by Object.
 fn parse_string(string: String) -> Object {
     match &string[..] {
         DEFINE => Object::Symbol(Symbol::Define),
@@ -114,6 +116,7 @@ mod test {
     };
     use crate::parser::parse;
 
+    /// test for not recursed list, whether parse function is correctly return normal list.
     #[test]
     fn test_simple_add() {
         const PROGRAM: &str = "(+ 1 2)";
@@ -128,6 +131,7 @@ mod test {
         );
     }
 
+    /// test for recursive list, whether parse function is correctly ignore new_line and whitespace or not, and correctly return recursed list or not.
     #[test]
     fn test_recursive_list() {
         const PROGRAM: &str = "(
