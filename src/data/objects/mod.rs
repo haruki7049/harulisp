@@ -19,30 +19,17 @@ pub enum Object {
     Bool(bool),
     Float(f64),
     String(String),
-    Symbol(Symbol),
     List(Vec<Object>),
-    Lambda(Vec<String>, Vec<Object>),
-}
 
-#[derive(Debug, Clone, PartialEq)]
-pub enum Symbol {
     Define,
     If,
-    Lambda,
-    Operator(Operator),
-    Comparison(Comparison),
-}
+    Lambda(Vec<String>, Vec<Object>),
 
-#[derive(Debug, Clone, PartialEq)]
-pub enum Operator {
     Plus,
     Minus,
     Asterisk,
     Slash,
-}
 
-#[derive(Debug, Clone, PartialEq)]
-pub enum Comparison {
     Shorter,
     Greater,
     Equal,
@@ -57,7 +44,6 @@ impl std::fmt::Display for Object {
             Object::Bool(boolean) => write!(f, "{}", boolean),
             Object::Float(float) => write!(f, "{}", float),
             Object::String(string) => write!(f, "{}", string),
-            Object::Symbol(symbol) => write!(f, "{}", symbol),
             Object::Lambda(parameters, body) => {
                 write!(f, "Lambda(")?;
 
@@ -81,40 +67,18 @@ impl std::fmt::Display for Object {
                 }
                 write!(f, ")")
             }
-        }
-    }
-}
+            Object::Define => write!(f, "{}", DEFINE),
+            Object::If => write!(f, "{}", IF),
 
-impl std::fmt::Display for Symbol {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Symbol::Define => write!(f, "{}", DEFINE),
-            Symbol::If => write!(f, "{}", IF),
-            Symbol::Lambda => write!(f, "{}", LAMBDA),
-            Symbol::Operator(operator) => write!(f, "{}", operator),
-            Symbol::Comparison(comparison) => write!(f, "{}", comparison),
-        }
-    }
-}
+            Object::Plus => write!(f, "{}", PLUS),
+            Object::Minus => write!(f, "{}", MINUS),
+            Object::Asterisk => write!(f, "{}", ASTERISK),
+            Object::Slash => write!(f, "{}", SLASH),
 
-impl std::fmt::Display for Operator {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Operator::Plus => write!(f, "{}", PLUS),
-            Operator::Minus => write!(f, "{}", MINUS),
-            Operator::Asterisk => write!(f, "{}", ASTERISK),
-            Operator::Slash => write!(f, "{}", SLASH),
-        }
-    }
-}
-
-impl std::fmt::Display for Comparison {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Comparison::Shorter => write!(f, "{}", SHORTER),
-            Comparison::Greater => write!(f, "{}", GREATER),
-            Comparison::Equal => write!(f, "{}", EQUAL),
-            Comparison::NotEqual => write!(f, "{}", NOT_EQUAL),
+            Object::Shorter => write!(f, "{}", SHORTER),
+            Object::Greater => write!(f, "{}", GREATER),
+            Object::Equal => write!(f, "{}", EQUAL),
+            Object::NotEqual => write!(f, "{}", NOT_EQUAL),
         }
     }
 }

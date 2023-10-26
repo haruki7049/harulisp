@@ -1,23 +1,6 @@
-use crate::data::{
-    objects::{
-        Object,
-        Symbol,
-        Operator,
-        Comparison,
-        DEFINE,
-        IF,
-        LAMBDA,
-
-        PLUS,
-        MINUS,
-        ASTERISK,
-        SLASH,
-
-        SHORTER,
-        GREATER,
-        EQUAL,
-        NOT_EQUAL,
-    },
+use crate::data::objects::{
+    Comparison, Object, Operator, Symbol, ASTERISK, DEFINE, EQUAL, GREATER, IF, LAMBDA, MINUS,
+    NOT_EQUAL, PLUS, SHORTER, SLASH,
 };
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -44,12 +27,13 @@ impl Env {
     pub fn get(&self, name: &str) -> Option<Object> {
         match self.variables.get(name) {
             Some(value) => Some(value.clone()),
-            None => self.parent
+            None => self
+                .parent
                 .as_ref()
                 .and_then(|o| o.borrow().get(name).clone()),
         }
     }
-    
+
     pub fn set(&mut self, name: &str, value: Object) {
         self.variables.insert(name.to_string(), value);
     }
@@ -66,12 +50,12 @@ pub fn convert_string_from_symbol(symbol: &Symbol) -> String {
             Operator::Minus => String::from(MINUS),
             Operator::Asterisk => String::from(ASTERISK),
             Operator::Slash => String::from(SLASH),
-        }
+        },
         Symbol::Comparison(comparison) => match comparison {
             Comparison::Shorter => String::from(SHORTER),
             Comparison::Greater => String::from(GREATER),
             Comparison::Equal => String::from(EQUAL),
             Comparison::NotEqual => String::from(NOT_EQUAL),
-        }
+        },
     }
 }

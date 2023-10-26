@@ -1,13 +1,5 @@
-use crate::data::env::{
-    convert_string_from_symbol,
-    Env,
-};
-use crate::data::objects::{
-    Object,
-    Symbol,
-    Operator,
-    Comparison,
-};
+use crate::data::env::{convert_string_from_symbol, Env};
+use crate::data::objects::{Comparison, Object, Operator, Symbol};
 use crate::parser::parse;
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -37,7 +29,9 @@ fn evaluate_object(object: &Object, env: &mut Rc<RefCell<Env>>) -> Result<Object
 
 /// evaluate_symbol function
 fn evaluate_symbol(symbol: &Symbol, env: &mut Rc<RefCell<Env>>) -> Result<Object, String> {
-    let val = env.borrow_mut().get(convert_string_from_symbol(symbol).as_str());
+    let val = env
+        .borrow_mut()
+        .get(convert_string_from_symbol(symbol).as_str());
     if val.is_none() {
         return Err(format!("Unbound symbol: {}", symbol));
     }
@@ -55,7 +49,7 @@ fn evaluate_list(list: &Vec<Object>, env: &mut Rc<RefCell<Env>>) -> Result<Objec
             Symbol::Operator(operator) => evaluate_operation(&operator, &list, env),
             Symbol::Comparison(comparison) => evaluate_comparison(&comparison, &list, env),
             _ => evaluate_function_call(&symbol, &list, env),
-        }
+        },
         _ => {
             let mut new_list = Vec::new();
             Ok(Object::List(new_list))
@@ -64,7 +58,11 @@ fn evaluate_list(list: &Vec<Object>, env: &mut Rc<RefCell<Env>>) -> Result<Objec
 }
 
 /// evaluate_operation function
-fn evaluate_operation(operator: &Operator, list: &Vec<Object>, env: &mut Rc<RefCell<Env>>) -> Result<Object, String> {
+fn evaluate_operation(
+    operator: &Operator,
+    list: &Vec<Object>,
+    env: &mut Rc<RefCell<Env>>,
+) -> Result<Object, String> {
     if list.len() != 3 {
         return Err(format!("Invalid number of arguments for infix operator"));
     }
@@ -82,7 +80,11 @@ fn is_float_object(object: &Object) -> bool {
 }
 
 /// evaluate_comparison function
-fn evaluate_comparison(comparison: &Comparison, list: &Vec<Object>, env: &mut Rc<RefCell<Env>>) -> Result<Object, String> {
+fn evaluate_comparison(
+    comparison: &Comparison,
+    list: &Vec<Object>,
+    env: &mut Rc<RefCell<Env>>,
+) -> Result<Object, String> {
 }
 
 /// evaluate_function_definition function
@@ -142,8 +144,14 @@ fn evaluate_if(list: &Vec<Object>, env: &mut Rc<RefCell<Env>>) -> Result<Object,
     }
 }
 
-fn evaluate_function_call(symbol: &Symbol, list: &Vec<Object>, env: &mut Rc<RefCell<Env>>) -> Result<Object, String> {
-    let lambda = env.borrow_mut().get(convert_string_from_symbol(symbol).as_str());
+fn evaluate_function_call(
+    symbol: &Symbol,
+    list: &Vec<Object>,
+    env: &mut Rc<RefCell<Env>>,
+) -> Result<Object, String> {
+    let lambda = env
+        .borrow_mut()
+        .get(convert_string_from_symbol(symbol).as_str());
     if lambda.is_none() {
         return Err(format!("Unbound symbol: {}", symbol));
     }

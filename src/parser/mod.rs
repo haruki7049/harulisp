@@ -1,21 +1,6 @@
+use crate::data::objects::{Comparison, Object, Operator, Symbol};
 use crate::data::objects::{
-    Object,
-    Symbol,
-    Operator,
-    Comparison,
-};
-use crate::data::objects::{
-    DEFINE,
-    IF,
-    LAMBDA,
-    PLUS,
-    MINUS,
-    ASTERISK,
-    SLASH,
-    SHORTER,
-    GREATER,
-    EQUAL,
-    NOT_EQUAL,
+    ASTERISK, DEFINE, EQUAL, GREATER, IF, LAMBDA, MINUS, NOT_EQUAL, PLUS, SHORTER, SLASH,
 };
 use crate::data::tokens::Token;
 use crate::data::tokens::TokenError;
@@ -30,7 +15,11 @@ pub fn parse(program: &str) -> Result<Object, ParseError> {
         });
     }
 
-    let mut tokens: Vec<Token> = token_result.unwrap().into_iter().rev().collect::<Vec<Token>>();
+    let mut tokens: Vec<Token> = token_result
+        .unwrap()
+        .into_iter()
+        .rev()
+        .collect::<Vec<Token>>();
     let parsed_list: Object = parse_list(&mut tokens)?;
     Ok(parsed_list)
 }
@@ -83,12 +72,12 @@ fn parse_string(string: String) -> Object {
         MINUS => Object::Symbol(Symbol::Operator(Operator::Minus)),
         ASTERISK => Object::Symbol(Symbol::Operator(Operator::Plus)),
         SLASH => Object::Symbol(Symbol::Operator(Operator::Plus)),
-        
+
         SHORTER => Object::Symbol(Symbol::Comparison(Comparison::Shorter)),
         GREATER => Object::Symbol(Symbol::Comparison(Comparison::Greater)),
         EQUAL => Object::Symbol(Symbol::Comparison(Comparison::Equal)),
         NOT_EQUAL => Object::Symbol(Symbol::Comparison(Comparison::NotEqual)),
-        
+
         _ => Object::String(string),
     }
 }
@@ -109,11 +98,7 @@ impl std::fmt::Display for ParseError {
 /// Parser test
 #[cfg(test)]
 mod test {
-    use crate::data::objects::{
-        Object,
-        Symbol,
-        Operator,
-    };
+    use crate::data::objects::{Object, Operator, Symbol};
     use crate::parser::parse;
 
     /// test for not recursed list, whether parse function is correctly return normal list.
