@@ -50,7 +50,7 @@ impl PartialEq<Token> for &mut Token {
 impl std::ops::Deref for Token {
     type Target = Token;
     fn deref(&self) -> &Self::Target {
-        &self
+        self
     }
 }
 
