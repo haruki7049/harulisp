@@ -4,7 +4,7 @@ use crate::data::tokens::TokenError;
 /// tokenize function, convert from &str to Vec<Token>. If this function is failed, Return TokenError wrapped by Result's Error.
 pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
     // ")" の片端にスペースを追加
-    let p: &str = &program.replace(")", " )");
+    let p: &str = &program.replace(')', " )");
 
     let program_vector: Vec<char> = make_vector_char(p);
     let mut tokens: Vec<Token> = vec![];
@@ -14,7 +14,7 @@ pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
     for term in words {
         remove_whitespace_token(&mut tokens);
 
-        let t: &str = &term.as_str();
+        let t: &str = term.as_str();
 
         match t {
             "(" => tokens.push(Token::LParen),
@@ -97,7 +97,7 @@ fn wordnize(program_vector: &Vec<char>) -> Vec<String> {
 fn create_word(ch: char, word: &mut Vec<char>, literal_mode: bool) -> Result<Vec<char>, String> {
     // chからwordに一つずつ追加する
     word.push(ch);
-    if literal_mode == true {
+    if literal_mode {
         if ch == '\"' || ch == '\'' {
             Ok(word.to_vec())
         } else {
@@ -121,7 +121,7 @@ mod test_lexer {
     #[test]
     fn test_one_sentence() {
         const PROGRAM: &str = "(define x 1)";
-        let tokens: Vec<Token> = tokenize(PROGRAM).unwrap_or(vec![]);
+        let tokens: Vec<Token> = tokenize(PROGRAM).unwrap_or_default();
         assert_eq!(
             tokens,
             vec![
@@ -140,7 +140,7 @@ mod test_lexer {
         const PROGRAM: &str = "(
             define x 19
             )";
-        let tokens: Vec<Token> = tokenize(PROGRAM).unwrap_or(vec![]);
+        let tokens: Vec<Token> = tokenize(PROGRAM).unwrap_or_default();
         assert_eq!(
             tokens,
             vec![
@@ -157,7 +157,7 @@ mod test_lexer {
     #[test]
     fn test_string_quotation() {
         const PROGRAM: &str = "(define sample_string \'hoge fuga\')";
-        let tokens: Vec<Token> = tokenize(PROGRAM).unwrap_or(vec![]);
+        let tokens: Vec<Token> = tokenize(PROGRAM).unwrap_or_default();
         assert_eq!(
             tokens,
             vec![
