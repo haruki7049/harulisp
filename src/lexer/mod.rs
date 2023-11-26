@@ -21,19 +21,12 @@ pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
             ")" => tokens.push(Token::RParen),
             "\'" | "\"" => {}
             _ => {
-                let i = t.parse::<isize>();
-                if i.is_ok() {
-                    tokens.push(Token::Integer(i.unwrap()));
-                } else {
-                    let f = t.parse::<f64>();
-                    if f.is_ok() {
-                        tokens.push(Token::Float(f.unwrap()));
-                    } else {
-                        let s = t.parse::<String>();
-                        if s.is_ok() {
-                            tokens.push(Token::String(s.unwrap()));
-                        }
-                    }
+                if let Ok(i) = t.parse::<isize>() {
+                    tokens.push(Token::Integer(i));
+                } else if let Ok(f) = t.parse::<f64>() {
+                    tokens.push(Token::Float(f));
+                } else if let Ok(s) = t.parse::<String>() {
+                    tokens.push(Token::String(s));
                 }
             }
         }
@@ -58,7 +51,7 @@ fn remove_whitespace_token(result: &mut Vec<Token>) {
 
 /// making word, Vector of String.
 fn wordnize(program_vector: &Vec<char>) -> Vec<String> {
-    let mut result: _ = vec![];
+    let mut result = vec![];
     let mut word: Vec<char> = vec![];
     let mut literal_mode: bool = false; // さいしょはかならすリテラルはこないため、falseに設定
 
