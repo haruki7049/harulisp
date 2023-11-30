@@ -3,10 +3,7 @@ use crate::data::tokens::TokenError;
 
 /// tokenize function, convert from &str to Vec<Token>. If this function is failed, Return TokenError wrapped by Result's Error.
 pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
-    // ")" の片端にスペースを追加
-    let p: &str = &program.replace(')', " )");
-
-    let program_vector: Vec<char> = make_vector_char(p);
+    let program_vector: Vec<char> = program.replace(')', " )").chars().collect();
     let mut tokens: Vec<Token> = vec![];
 
     let words: Vec<String> = wordnize(&program_vector);
@@ -33,11 +30,6 @@ pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
     }
 
     Ok(tokens)
-}
-
-/// convert string literal to Vec<char>
-fn make_vector_char(str: &str) -> Vec<char> {
-    str.chars().collect()
 }
 
 fn remove_whitespace_token(result: &mut Vec<Token>) {
@@ -162,7 +154,7 @@ mod test_lexer {
             ]
         );
     }
-    
+
     /// test_string_double_quotation test, whether tokenize function correctly handle double_quotation or not.
     #[test]
     fn test_string_double_quotation() {
