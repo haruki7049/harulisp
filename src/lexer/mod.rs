@@ -146,10 +146,27 @@ mod test_lexer {
         );
     }
 
-    /// test_string_quotation test, whether tokenize function correctly handle quotation or not.
+    /// test_string_single_quotation test, whether tokenize function correctly handle single_quotation or not.
     #[test]
-    fn test_string_quotation() {
+    fn test_string_single_quotation() {
         const PROGRAM: &str = "(define sample_string \'hoge fuga\')";
+        let tokens: Vec<Token> = tokenize(PROGRAM).unwrap_or_default();
+        assert_eq!(
+            tokens,
+            vec![
+                Token::LParen,
+                Token::String("define".to_string()),
+                Token::String("sample_string".to_string()),
+                Token::String("hoge fuga".to_string()),
+                Token::RParen,
+            ]
+        );
+    }
+    
+    /// test_string_double_quotation test, whether tokenize function correctly handle double_quotation or not.
+    #[test]
+    fn test_string_double_quotation() {
+        const PROGRAM: &str = "(define sample_string \"hoge fuga\")";
         let tokens: Vec<Token> = tokenize(PROGRAM).unwrap_or_default();
         assert_eq!(
             tokens,
