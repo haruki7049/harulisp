@@ -1,5 +1,5 @@
 use crate::data::objects::{
-    Object, ASTERISK, DEFINE, EQUAL, GREATER, IF, LAMBDA, MINUS, NOT_EQUAL, PLUS, SHORTER, SLASH,
+    Object, ASTERISK, DEFINE, EQUAL, GREATER, IF, MINUS, NOT_EQUAL, PLUS, SHORTER, SLASH,
 };
 use crate::data::tokens::Token;
 use crate::data::tokens::TokenError;
