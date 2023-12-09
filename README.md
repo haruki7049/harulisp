@@ -1,3 +1,19 @@
 # harulisp
 
-My lisp implementation. /PURPOSE.md contains this repo's purpose and structure of rust module. /TODO.md contains my TODO list.
+A modern lisp dialect.
+
+## Naming
+
+`HARUki's LISP.`
+`HARULISP`
+`harulisp`
+
+# Features
+
+- Unit test integration.
+- Module system integration.
+- A package manager integration for harulisp.
+
+# Below things will be NOT implemented
+
+- This language is NOT for system programming.
