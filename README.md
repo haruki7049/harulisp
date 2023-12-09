@@ -4,9 +4,9 @@ A modern lisp dialect.
 
 ## Naming
 
-`HARUki's LISP.`
-`HARULISP`
-`harulisp`
+First, `HARUki's LISP.`
+Next, `HARULISP`
+Finally, `harulisp`
 
 # Features
 
