@@ -1,6 +1,5 @@
-use crate::data::objects::{Comparison, Object, Operator, Symbol};
 use crate::data::objects::{
-    ASTERISK, DEFINE, EQUAL, GREATER, IF, LAMBDA, MINUS, NOT_EQUAL, PLUS, SHORTER, SLASH,
+    Object, ASTERISK, DEFINE, EQUAL, GREATER, IF, LAMBDA, MINUS, NOT_EQUAL, PLUS, SHORTER, SLASH,
 };
 use crate::data::tokens::Token;
 use crate::data::tokens::TokenError;
@@ -64,19 +63,18 @@ fn parse_list(tokens_vec: &mut Vec<Token>) -> Result<Object, ParseError> {
 /// parse String to Object, if there is no symbol return Raw string wrapped by Object.
 fn parse_string(string: String) -> Object {
     match &string[..] {
-        DEFINE => Object::Symbol(Symbol::Define),
-        IF => Object::Symbol(Symbol::If),
-        LAMBDA => Object::Symbol(Symbol::Lambda),
+        DEFINE => Object::Define,
+        IF => Object::If,
 
-        PLUS => Object::Symbol(Symbol::Operator(Operator::Plus)),
-        MINUS => Object::Symbol(Symbol::Operator(Operator::Minus)),
-        ASTERISK => Object::Symbol(Symbol::Operator(Operator::Plus)),
-        SLASH => Object::Symbol(Symbol::Operator(Operator::Plus)),
+        PLUS => Object::Plus,
+        MINUS => Object::Minus,
+        ASTERISK => Object::Asterisk,
+        SLASH => Object::Slash,
 
-        SHORTER => Object::Symbol(Symbol::Comparison(Comparison::Shorter)),
-        GREATER => Object::Symbol(Symbol::Comparison(Comparison::Greater)),
-        EQUAL => Object::Symbol(Symbol::Comparison(Comparison::Equal)),
-        NOT_EQUAL => Object::Symbol(Symbol::Comparison(Comparison::NotEqual)),
+        SHORTER => Object::Shorter,
+        GREATER => Object::Greater,
+        EQUAL => Object::Equal,
+        NOT_EQUAL => Object::NotEqual,
 
         _ => Object::String(string),
     }
@@ -98,7 +96,7 @@ impl std::fmt::Display for ParseError {
 /// Parser test
 #[cfg(test)]
 mod test {
-    use crate::data::objects::{Object, Operator, Symbol};
+    use crate::data::objects::Object;
     use crate::parser::parse;
 
     /// test for not recursed list, whether parse function is correctly return normal list.
@@ -108,11 +106,7 @@ mod test {
         let list = parse(PROGRAM).unwrap();
         assert_eq!(
             list,
-            Object::List(vec![
-                Object::Symbol(Symbol::Operator(Operator::Plus)),
-                Object::Integer(1),
-                Object::Integer(2),
-            ])
+            Object::List(vec![Object::Plus, Object::Integer(1), Object::Integer(2),])
         );
     }
 
@@ -129,17 +123,17 @@ mod test {
             list,
             Object::List(vec![
                 Object::List(vec![
-                    Object::Symbol(Symbol::Define),
+                    Object::Define,
                     Object::String("x".to_string()),
                     Object::Integer(12),
                 ]),
                 Object::List(vec![
-                    Object::Symbol(Symbol::Define),
+                    Object::Define,
                     Object::String("y".to_string()),
                     Object::Integer(3),
                 ]),
                 Object::List(vec![
-                    Object::Symbol(Symbol::Operator(Operator::Plus)),
+                    Object::Plus,
                     Object::String("x".to_string()),
                     Object::String("y".to_string()),
                 ]),
@@ -147,7 +141,8 @@ mod test {
         );
     }
 
-    /// capital character test, whether this process is correctly run or not. the program is mixed CAPITAL charactor in define, as DeFinE.
+    /// capital character test, whether this process is correctly run or not. the test program is mixed CAPITAL charactor in define, as DeFinE.
+    #[should_panic]
     #[test]
     fn test_capital_character() {
         const PROGRAM: &str = "(
@@ -156,11 +151,18 @@ mod test {
         let list = parse(PROGRAM).unwrap();
         assert_eq!(
             list,
-            Object::List(vec![Object::List(vec![
-                Object::String("DeFinE".to_string()),
+            Object::List(vec![
+                Object::Define,
                 Object::String("x".to_string()),
                 Object::Integer(23),
-            ])])
+            ]),
         );
+    }
+
+    #[should_panic]
+    #[test]
+    fn no_parentheses() {
+        const PROGRAM: &str = "define x 15";
+        let _list = parse(PROGRAM).unwrap();
     }
 }

@@ -4,7 +4,7 @@ use regex_lite::Regex;
 
 /// tokenize function, convert from &str to Vec<Token>. If this function is failed, Return TokenError wrapped by Result's Error.
 pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
-    let re: Regex = Regex::new(r#"[()]|\w+|-?\d|".*"|'.*'"#).unwrap();
+    let re: Regex = Regex::new(r#"[()]|==|!=|<=|>=|[+*/\-]|\w+|-?\d|".*"|'.*'"#).unwrap();
     let tokens: Vec<&str> = re.find_iter(program).map(|m| m.as_str()).collect();
 
     let mut result: Vec<Token> = Vec::new();
@@ -15,6 +15,8 @@ pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
             ")" => result.push(Token::RParen),
             "\'" | "\"" => {}
             _ => {
+                // "+"などの値がToken::String()として返らない
+
                 if let Ok(i) = token.parse::<isize>() {
                     result.push(Token::Integer(i));
                 } else if let Ok(f) = token.parse::<f64>() {
@@ -34,6 +36,23 @@ pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
 mod test_lexer {
     use crate::data::tokens::Token;
     use crate::lexer::tokenize;
+    use regex_lite::Regex;
+
+    #[test]
+    fn plus_operator() {
+        const PROGRAM: &str = "(+ 1 2)";
+        let tokens: Vec<Token> = tokenize(PROGRAM).unwrap_or_default();
+        assert_eq!(
+            tokens,
+            vec![
+                Token::LParen,
+                Token::String("+".to_string()),
+                Token::Integer(1),
+                Token::Integer(2),
+                Token::RParen,
+            ]
+        );
+    }
 
     /// test_one_sentence test, whether tokenize function correctly convert from &str to Token or not.
     #[test]
@@ -103,5 +122,22 @@ mod test_lexer {
                 Token::RParen,
             ]
         );
+    }
+
+    #[test]
+    fn test_regular_expression() {
+        const PLUS_PROGRAM: &str = "(+ 1 2)";
+        const MINUS_PROGRAM: &str = "(- 6 3)";
+        const EQUAL_PROGRAM: &str = "(== 1 2)";
+        let re: Regex = Regex::new(r#"[()]|==|!=|<=|>=|[+*/\-]|\w+|-?\d|".*"|'.*'"#).unwrap();
+
+        let tokens: Vec<&str> = re.find_iter(PLUS_PROGRAM).map(|m| m.as_str()).collect();
+        assert_eq!(tokens, vec!["(", "+", "1", "2", ")",]);
+
+        let tokens: Vec<&str> = re.find_iter(MINUS_PROGRAM).map(|m| m.as_str()).collect();
+        assert_eq!(tokens, vec!["(", "-", "6", "3", ")",]);
+
+        let tokens: Vec<&str> = re.find_iter(EQUAL_PROGRAM).map(|m| m.as_str()).collect();
+        assert_eq!(tokens, vec!["(", "==", "1", "2", ")",]);
     }
 }
