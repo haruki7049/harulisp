@@ -5,7 +5,7 @@
 //!
 //! Purpose of this repo is to create my original LISP implementation. this project is only used pure rust-lang, stable toolchain, standard library and 2021 Edition.
 //!
-//! # goal of this project
+//! # Goal of this project
 //!
 //! - SIMPLE IS THE BEST, but useful for your development
 //! - nice package manager
@@ -42,13 +42,6 @@
 //! - float
 //! - boolean
 //! - string (this must be shorter alfabet, or underbar.)
-//!
-//! # structure of rust module
-//!
-//! - src/data (contains some data, which is Token, Commands and Object)
-//! - src/lexer (contains lexer, which is used to convert from string literal to Token)
-//! - src/parser (contains parser, which is used to convert from Token to Object)
-//! - src/evaluator (contains evaluator, which is used to convert from Object to Rust-lang's RAW process)
 
 /// data module, contains the data which is used by lexer, parser and evaluator.
 pub mod data;
