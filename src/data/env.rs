@@ -3,6 +3,7 @@ use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
 
+/// contains some variables, in harulisp's program.
 #[derive(Debug, PartialEq, Default)]
 pub struct Env {
     parent: Option<Rc<RefCell<Env>>>,
