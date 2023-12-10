@@ -51,3 +51,6 @@ pub mod lexer;
 
 /// parser module, contains my original parser.
 pub mod parser;
+
+/// evaluator module, contains my original evaluator.
+pub mod evaluator;
