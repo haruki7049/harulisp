@@ -140,4 +140,20 @@ mod test_lexer {
         let tokens: Vec<&str> = re.find_iter(EQUAL_PROGRAM).map(|m| m.as_str()).collect();
         assert_eq!(tokens, vec!["(", "==", "1", "2", ")",]);
     }
+
+    #[test]
+    fn test_float() {
+        const PROGRAM: &str = "(+ 1.3 4.5)";
+        let tokens: Vec<Token> = tokenize(PROGRAM).unwrap_or_default();
+        assert_eq!(
+            tokens,
+            vec![
+                Token::LParen,
+                Token::String("+".to_string()),
+                Token::Float(1.3),
+                Token::Float(4.5),
+                Token::RParen,
+            ]
+        );
+    }
 }
