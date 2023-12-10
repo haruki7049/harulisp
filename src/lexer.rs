@@ -2,7 +2,7 @@ use crate::data::tokens::Token;
 use crate::data::tokens::TokenError;
 use regex_lite::Regex;
 
-/// tokenize function, convert from &str to Vec<Token>. If this function is failed, Return TokenError wrapped by Result's Error.
+/// tokenize function, convert from &str to `Vec<Token>`. If this function is failed, Return TokenError wrapped by Result's Error.
 pub fn tokenize(program: &str) -> Result<Vec<Token>, TokenError> {
     let re: Regex = Regex::new(r#"[()]|==|!=|<=|>=|[+*/\-]|\w+|-?\d|".*"|'.*'"#).unwrap();
     let tokens: Vec<&str> = re.find_iter(program).map(|m| m.as_str()).collect();
