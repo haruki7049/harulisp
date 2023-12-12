@@ -1,4 +1,7 @@
-use clap::Parser;
+use clap::{
+    Parser,
+    ValueEnum,
+};
 use std::str::FromStr;
 
 fn main() {
@@ -14,7 +17,7 @@ struct Args {
     sub_command: SubCommands,
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, ValueEnum)]
 enum SubCommands {
     Repl,
 }
