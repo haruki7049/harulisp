@@ -1,7 +1,4 @@
-use clap::{
-    Parser,
-    ValueEnum,
-};
+use clap::{Parser, ValueEnum};
 use std::str::FromStr;
 
 fn main() {
