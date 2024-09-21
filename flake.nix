@@ -22,6 +22,10 @@
             programs.nixfmt-rfc-style.enable = true;
           };
 
+          checks = {
+            inherit harulisp;
+          };
+
           packages = {
             inherit harulisp;
             default = harulisp;
