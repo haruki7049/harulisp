@@ -1,61 +1,39 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
-    flake-utils.url = "github:numtide/flake-utils";
+    flake-parts.url = "github:hercules-ci/flake-parts";
     treefmt-nix.url = "github:numtide/treefmt-nix";
-    rust-overlay.url = "github:oxalica/rust-overlay";
-    crane.url = "github:ipetkov/crane";
   };
 
-  outputs = { self, nixpkgs, flake-utils, treefmt-nix, rust-overlay, crane }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = import nixpkgs { inherit system; overlays = [ (import rust-overlay) ]; };
-        rust = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
-        treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
-        craneLib = (crane.mkLib pkgs).overrideToolchain rust;
-        src = ./.;
-        cargoArtifacts = craneLib.buildDepsOnly {
-          inherit src;
-        };
-        hrsp = craneLib.buildPackage {
-          inherit src cargoArtifacts;
-          strictDeps = true;
+  outputs =
+    inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
+      imports = [ inputs.treefmt-nix.flakeModule ];
+      perSystem =
+        { pkgs, ... }:
+        let
+          ocamlPackages = pkgs.ocaml-ng.ocamlPackages_5_1;
+        in
+        {
+          treefmt = {
+            projectRootFile = "flake.nix";
+            programs.nixfmt-rfc-style.enable = true;
+          };
 
-          doCheck = true;
-        };
-        cargo-clippy = craneLib.cargoClippy {
-          inherit src cargoArtifacts;
-          cargoClippyExtraArgs = "--verbose -- --deny warnings";
-        };
-        cargo-doc = craneLib.cargoDoc {
-          inherit src cargoArtifacts;
-        };
-      in
-      {
-        formatter = treefmtEval.config.build.wrapper;
+          devShells.default = pkgs.mkShell {
+            nativeBuildInputs = [
+              ocamlPackages.ocaml
+              ocamlPackages.ocaml-lsp
+              ocamlPackages.dune_3
+            ];
 
-        packages.default = hrsp;
-        packages.doc = cargo-doc;
+            buildInputs = with ocamlPackages; [ ];
 
-        apps.default = flake-utils.lib.mkApp {
-          drv = self.packages.${system}.default;
+            shellHook = ''
+              export PS1="\n[nix-shell:\w]$ "
+            '';
+          };
         };
-
-        checks = {
-          inherit hrsp cargo-clippy cargo-doc;
-          formatting = treefmtEval.config.build.check self;
-        };
-
-        devShells.default = pkgs.mkShell {
-          packages = [
-            rust
-          ];
-
-          shellHook = ''
-            export PS1="\n[nix-shell:\w]$ "
-          '';
-        };
-      }
-    );
+    };
 }
