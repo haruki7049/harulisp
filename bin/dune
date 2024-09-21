@@ -1,4 +1,4 @@
 (executable
  (public_name harulisp)
- (name main)
+ (name harepl)
  (libraries harulisp))
