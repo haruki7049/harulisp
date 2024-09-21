@@ -14,11 +14,17 @@
         { pkgs, ... }:
         let
           ocamlPackages = pkgs.ocaml-ng.ocamlPackages_5_1;
+          harulisp = pkgs.callPackage ./. { };
         in
         {
           treefmt = {
             projectRootFile = "flake.nix";
             programs.nixfmt-rfc-style.enable = true;
+          };
+
+          packages = {
+            inherit harulisp;
+            default = harulisp;
           };
 
           devShells.default = pkgs.mkShell {
