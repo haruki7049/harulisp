@@ -19,7 +19,9 @@
         {
           treefmt = {
             projectRootFile = "flake.nix";
-            programs.nixfmt-rfc-style.enable = true;
+            programs.nixfmt.enable = true;
+            programs.actionlint.enable = true;
+            programs.ocamlformat.enable = true;
           };
 
           checks = {
