@@ -8,3 +8,5 @@ edition = "2021"
 [dependencies]
 anyhow = { version = "1.0.98", features = ["backtrace"] }
 clap = { version = "4.5.37", features = ["derive"] }
+pest = "2.8.0"
+pest_derive = "2.8.0"

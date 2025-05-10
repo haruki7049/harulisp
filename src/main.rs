@@ -1,8 +1,11 @@
 use clap::Parser;
+use harulisp::eval;
 
 fn main() -> anyhow::Result<()> {
     let args: CLIArgs = CLIArgs::parse();
-    dbg!(args.script);
+
+    // Evaluation
+    eval::eval(args.script)?;
 
     Ok(())
 }
