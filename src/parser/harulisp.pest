@@ -1,1 +1,10 @@
-SExpression = { SOI ~ EOI }
+//! Harulisp syntax
+
+/// An S-expression, "( example-word )"
+SExpression = { SOI ~ "(" ~ PUNCT_CHARACTER* ~ (word ~ PUNCT_CHARACTER*)* ~ ")" ~ EOI }
+
+/// Punctuations
+PUNCT_CHARACTER = _{ " " | "\t" | NEWLINE }
+
+/// A word
+word = @{ (ASCII_ALPHA | "_" | "-")+ }
