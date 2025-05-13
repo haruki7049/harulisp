@@ -9,10 +9,11 @@ punct_word = _{ " " | "\n" | "\t" }
 /// ```ignore
 /// ( )
 /// ```
-SExpression     =  {
-    left_parenthesis ~ punct_word* ~ (word ~ punct_word* | int ~ punct_word* | SExpression ~ punct_word*)+ ~ right_parenthesis
+SExpression       =  {
+    left_parenthesis ~ punct_word* ~ (word ~ punct_word* | int ~ punct_word* | SExpression ~ punct_word* | string ~ punct_word*)+ ~ right_parenthesis
 }
 left_parenthesis  = @{ "(" }
 right_parenthesis = @{ ")" }
-word            = @{ (ASCII_ALPHA | "-" | "_")+ }
-int             =  { ("+" | "-")? ~ ASCII_DIGIT+ }
+word              = @{ (ASCII_ALPHA | "-" | "_")+ }
+string            = @{ "\"" ~ (!("\"") ~ ANY)+ ~ "\"" }
+int               =  { ("+" | "-")? ~ ASCII_DIGIT+ }

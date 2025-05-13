@@ -13,6 +13,7 @@ pub struct Program {
 
 #[derive(Debug)]
 pub enum Token {
+    String(String),
     Word(String),
     Int(i32),
     SExpression(Vec<Token>),
@@ -26,7 +27,8 @@ fn parse_pair(pair: Pair<Rule>) -> anyhow::Result<Program> {
         | Rule::left_parenthesis
         | Rule::right_parenthesis
         | Rule::word
-        | Rule::int => unreachable!(),
+        | Rule::int
+        | Rule::string => unreachable!(),
         Rule::program => {
             let rule = pair.into_inner();
             let mut result: Program = Program::default();
@@ -41,7 +43,8 @@ fn parse_pair(pair: Pair<Rule>) -> anyhow::Result<Program> {
                     | Rule::left_parenthesis
                     | Rule::right_parenthesis
                     | Rule::word
-                    | Rule::int => unreachable!(),
+                    | Rule::int
+                    | Rule::string => unreachable!(),
                 }
             });
 
@@ -62,6 +65,7 @@ fn parse_sexp(sexpr: Pair<Rule>) -> anyhow::Result<Token> {
         match w.as_rule() {
             Rule::SExpression => result.push(parse_sexp(w)?),
             Rule::word => result.push(Token::Word(String::from(w.as_span().as_str()))),
+            Rule::string => result.push(Token::String(String::from(w.as_span().as_str()))),
             Rule::int => result.push(Token::Int(w.as_span().as_str().parse::<i32>()?)),
 
             Rule::EOI
