@@ -6,8 +6,10 @@ use pest_derive::Parser;
 #[grammar = "parser/harulisp.pest"]
 pub struct HarulispParser;
 
-#[derive(Debug)]
-pub struct Program;
+#[derive(Debug, Default)]
+pub struct Program {
+    statements: Vec<Token>,
+}
 
 #[derive(Debug)]
 pub enum Token {
@@ -27,43 +29,39 @@ fn parse_pair(pair: Pair<Rule>) -> anyhow::Result<Program> {
         | Rule::int => unreachable!(),
         Rule::program => {
             let mut rule = pair.into_inner();
+            let mut result: Program = Program::default();
             let sexpr: Pair<Rule> = rule.next().unwrap();
 
+            // TODO: Make a loop to process the program as: `( foofoo )\n( barbar )`
             match sexpr.as_rule() {
-                Rule::SExpression => {
-                    let result = parse_sexp(sexpr)?;
-                    dbg!(result);
-                    todo!()
-                }
-                v => {
-                    dbg!(v);
-                    todo!()
-                }
+                Rule::SExpression => result.statements.push(parse_sexp(sexpr)?),
+                Rule::EOI
+                | Rule::program
+                | Rule::punct_word
+                | Rule::left_parenthesis
+                | Rule::right_parenthesis
+                | Rule::word
+                | Rule::int => unreachable!(),
             }
+
+            Ok(result)
         }
     }
 }
 
 fn parse_sexp(sexpr: Pair<Rule>) -> anyhow::Result<Token> {
-    let result: Token = Token::SExpression(Vec::new());
+    let mut result: Vec<Token> = Vec::new();
 
     let mut rule = sexpr.into_inner();
     let _left_parenthesis: Pair<Rule> = rule.next().unwrap(); // "("
     let mut words: Vec<Pair<Rule>> = rule.into_iter().collect(); // "defvar"
     let _right_parenthesis: Pair<Rule> = words.pop().unwrap(); // ")"
 
-    dbg!(&words);
-
     for w in words {
-        dbg!(&w);
-
         match w.as_rule() {
-            Rule::SExpression => {
-                todo!()
-            }
-            Rule::word | Rule::int => {
-                todo!();
-            }
+            Rule::SExpression => result.push(parse_sexp(w)?),
+            Rule::word => result.push(Token::Word(String::from(w.as_span().as_str()))),
+            Rule::int => result.push(Token::Int(w.as_span().as_str().parse::<i32>()?)),
 
             Rule::EOI
             | Rule::program
@@ -73,7 +71,7 @@ fn parse_sexp(sexpr: Pair<Rule>) -> anyhow::Result<Token> {
         };
     }
 
-    Ok(result)
+    Ok(Token::SExpression(result))
 }
 
 pub fn parse(s: &str) -> anyhow::Result<Program> {
