@@ -13,11 +13,16 @@ Comments     = _{ Comment ~ ("\n"+ ~ Comment)* }
 /// ( )
 /// ```
 SExpression = {
-    left_parenthesis ~ punct_word* ~ (word ~ punct_word* | int ~ punct_word* | SExpression ~ punct_word* | string ~ punct_word*)+ ~ right_parenthesis
+    left_parenthesis ~ punct_word* ~ (word ~ punct_word* | int ~ punct_word* | SExpression ~ punct_word* | List ~ punct_word* | string ~ punct_word*)+ ~ right_parenthesis
 }
 
 /// A Comment
 Comment = @{ ";" ~ (!("\n") ~ ANY)+ ~ "\n"* }
+
+/// A List
+List = { list_left_parenthesis ~ punct_word* ~ (word ~ punct_word* | int ~ punct_word* | List ~ punct_word* | string ~ punct_word*)* ~ list_right_parenthesis }
+list_left_parenthesis = @{ "'(" }
+list_right_parenthesis = @{ ")" }
 
 left_parenthesis  = @{ "(" }
 right_parenthesis = @{ ")" }
