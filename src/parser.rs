@@ -38,7 +38,6 @@ fn parse_pair(pair: Pair<Rule>) -> anyhow::Result<Program> {
 
             // TODO: Make a loop to process the program as: `( foofoo )\n( barbar )`
             rule.clone().for_each(|sexpr| {
-                dbg!(&sexpr);
                 match sexpr.as_rule() {
                     Rule::SExpression => result.statements.push(parse_sexp(sexpr).unwrap()),
                     Rule::EOI => return,
