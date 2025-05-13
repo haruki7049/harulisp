@@ -34,18 +34,16 @@ fn parse_pair(pair: Pair<Rule>) -> anyhow::Result<Program> {
             let mut result: Program = Program::default();
 
             // TODO: Make a loop to process the program as: `( foofoo )\n( barbar )`
-            rule.clone().for_each(|sexpr| {
-                match sexpr.as_rule() {
-                    Rule::SExpression => result.statements.push(parse_sexp(sexpr).unwrap()),
-                    Rule::EOI => return,
-                    Rule::program
-                    | Rule::punct_word
-                    | Rule::left_parenthesis
-                    | Rule::right_parenthesis
-                    | Rule::word
-                    | Rule::int
-                    | Rule::string => unreachable!(),
-                }
+            rule.clone().for_each(|sexpr| match sexpr.as_rule() {
+                Rule::SExpression => result.statements.push(parse_sexp(sexpr).unwrap()),
+                Rule::EOI => return,
+                Rule::program
+                | Rule::punct_word
+                | Rule::left_parenthesis
+                | Rule::right_parenthesis
+                | Rule::word
+                | Rule::int
+                | Rule::string => unreachable!(),
             });
 
             Ok(result)
