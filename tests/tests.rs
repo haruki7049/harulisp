@@ -15,5 +15,17 @@ fn test() -> anyhow::Result<()> {
         .assert()
         .success();
 
+    let _ = Command::cargo_bin("harulisp")?
+        .arg("--script")
+        .arg("(def main (lambda '(hoge) (progn ( write_line hoge ) ( write_line \"This is a example text\"))))")
+        .assert()
+        .success();
+
+    let _ = Command::cargo_bin("harulisp")?
+        .arg("--script")
+        .arg("(def main (lambda '(hoge) (progn ( write_line hoge ) ( write_line \"This is a example text\"))))")
+        .assert()
+        .success();
+
     Ok(())
 }
