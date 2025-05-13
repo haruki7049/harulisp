@@ -14,5 +14,5 @@ SExpression     =  {
 }
 left_parenthesis  = @{ "(" }
 right_parenthesis = @{ ")" }
-word            = @{ ASCII_ALPHA+ }
+word            = @{ (ASCII_ALPHA | "-" | "_")+ }
 int             =  { ("+" | "-")? ~ ASCII_DIGIT+ }
