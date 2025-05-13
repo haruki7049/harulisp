@@ -29,8 +29,10 @@ fn test() -> anyhow::Result<()> {
 
     let _ = Command::cargo_bin("harulisp")?
         .arg("--script")
-        .arg("(def main (lambda '() (echo_foobar)))
-              (def echo_foobar (lambda '() (progn (write_line \"foobar\"))))")
+        .arg(
+            "(def main (lambda '() (echo_foobar)))
+              (def echo_foobar (lambda '() (progn (write_line \"foobar\"))))",
+        )
         .assert()
         .success();
 
