@@ -2,7 +2,7 @@ program    =  { SOI ~ punct_word* ~ (SExpressions | Comments)+ ~ EOI }
 punct_word = _{ " " | "\n" | "\t" }
 
 SExpressions = _{ SExpression ~ (punct_word* ~ SExpression)* }
-Comments = _{ Comment ~ ("\n"+ ~ Comment)* }
+Comments     = _{ Comment ~ ("\n"+ ~ Comment)* }
 
 /// A S-Expression
 /// ```ignore
@@ -12,7 +12,7 @@ Comments = _{ Comment ~ ("\n"+ ~ Comment)* }
 /// ```ignore
 /// ( )
 /// ```
-SExpression       =  {
+SExpression = {
     left_parenthesis ~ punct_word* ~ (word ~ punct_word* | int ~ punct_word* | SExpression ~ punct_word* | string ~ punct_word*)+ ~ right_parenthesis
 }
 
