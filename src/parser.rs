@@ -22,8 +22,11 @@ pub enum Token {
 fn parse_pair(pair: Pair<Rule>) -> anyhow::Result<Program> {
     match pair.as_rule() {
         Rule::EOI
+        | Rule::Comment
+        | Rule::Comments
         | Rule::punct_word
         | Rule::SExpression
+        | Rule::SExpressions
         | Rule::left_parenthesis
         | Rule::right_parenthesis
         | Rule::word
@@ -34,16 +37,22 @@ fn parse_pair(pair: Pair<Rule>) -> anyhow::Result<Program> {
             let mut result: Program = Program::default();
 
             // TODO: Make a loop to process the program as: `( foofoo )\n( barbar )`
-            rule.clone().for_each(|sexpr| match sexpr.as_rule() {
-                Rule::SExpression => result.statements.push(parse_sexp(sexpr).unwrap()),
-                Rule::EOI => return,
-                Rule::program
-                | Rule::punct_word
-                | Rule::left_parenthesis
-                | Rule::right_parenthesis
-                | Rule::word
-                | Rule::int
-                | Rule::string => unreachable!(),
+            rule.clone().for_each(|sexpr| {
+                dbg!(&sexpr);
+                match sexpr.as_rule() {
+                    Rule::SExpression => result.statements.push(parse_sexp(sexpr).unwrap()),
+                    Rule::EOI => return,
+                    Rule::Comment => (),
+                    Rule::program
+                    | Rule::Comments
+                    | Rule::SExpressions
+                    | Rule::punct_word
+                    | Rule::left_parenthesis
+                    | Rule::right_parenthesis
+                    | Rule::word
+                    | Rule::int
+                    | Rule::string => unreachable!(),
+                }
             });
 
             Ok(result)
@@ -65,12 +74,15 @@ fn parse_sexp(sexpr: Pair<Rule>) -> anyhow::Result<Token> {
             Rule::word => result.push(Token::Word(String::from(w.as_span().as_str()))),
             Rule::string => result.push(Token::String(String::from(w.as_span().as_str()))),
             Rule::int => result.push(Token::Int(w.as_span().as_str().parse::<i32>()?)),
+            Rule::Comment => (),
 
             Rule::EOI
+            | Rule::Comments
+            | Rule::SExpressions
             | Rule::program
             | Rule::punct_word
             | Rule::left_parenthesis
-            | Rule::right_parenthesis => todo!(),
+            | Rule::right_parenthesis => unreachable!(),
         };
     }
 

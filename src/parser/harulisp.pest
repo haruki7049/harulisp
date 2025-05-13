@@ -1,5 +1,8 @@
-program    =  { SOI ~ punct_word* ~ SExpression ~ (punct_word* ~ SExpression)* ~ EOI }
+program    =  { SOI ~ punct_word* ~ (SExpressions | Comments)+ ~ EOI }
 punct_word = _{ " " | "\n" | "\t" }
+
+SExpressions = _{ SExpression ~ (punct_word* ~ SExpression)* }
+Comments = _{ Comment ~ ("\n"+ ~ Comment)* }
 
 /// A S-Expression
 /// ```ignore
@@ -12,6 +15,10 @@ punct_word = _{ " " | "\n" | "\t" }
 SExpression       =  {
     left_parenthesis ~ punct_word* ~ (word ~ punct_word* | int ~ punct_word* | SExpression ~ punct_word* | string ~ punct_word*)+ ~ right_parenthesis
 }
+
+/// A Comment
+Comment = @{ ";" ~ (!("\n") ~ ANY)+ ~ "\n"* }
+
 left_parenthesis  = @{ "(" }
 right_parenthesis = @{ ")" }
 word              = @{ (ASCII_ALPHA | "-" | "_")+ }
