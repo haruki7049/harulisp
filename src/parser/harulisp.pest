@@ -21,6 +21,6 @@ Comment = @{ ";" ~ (!("\n") ~ ANY)+ ~ "\n"* }
 
 left_parenthesis  = @{ "(" }
 right_parenthesis = @{ ")" }
-word              = @{ (ASCII_ALPHA | "-" | "_")+ }
+word              = @{ (ASCII_ALPHA | "_")+ }
 string            = @{ "\"" ~ (!("\"") ~ ANY)+ ~ "\"" }
 int               =  { ("+" | "-")? ~ ASCII_DIGIT+ }
