@@ -1,10 +1,18 @@
-//! Harulisp syntax
+program    =  { SOI ~ punct_word* ~ SExpression ~ (punct_word* ~ SExpression)* ~ EOI }
+punct_word = _{ " " | "\n" | "\t" }
 
-/// An S-expression, "( example-word )"
-SExpression = { SOI ~ "(" ~ PUNCT_CHARACTER* ~ (word ~ PUNCT_CHARACTER*)* ~ ")" ~ EOI }
-
-/// Punctuations
-PUNCT_CHARACTER = _{ " " | "\t" | NEWLINE }
-
-/// A word
-word = @{ (ASCII_ALPHA | "_" | "-")+ }
+/// A S-Expression
+/// ```ignore
+/// ( progn ( say-hoge ) )
+/// ```
+/// The following is not SExpression:
+/// ```ignore
+/// ( )
+/// ```
+SExpression     =  {
+    left_parenthesis ~ punct_word* ~ (word ~ punct_word* | int ~ punct_word* | SExpression ~ punct_word*)+ ~ right_parenthesis
+}
+left_parenthesis  = @{ "(" }
+right_parenthesis = @{ ")" }
+word            = @{ ASCII_ALPHA+ }
+int             =  { ("+" | "-")? ~ ASCII_DIGIT+ }
