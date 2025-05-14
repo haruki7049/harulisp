@@ -1,4 +1,4 @@
-program    =  { SOI ~ punct_word* ~ (SExpressions | Comments)+ ~ EOI }
+program    =  { SOI ~ punct_word* ~ (SExpressions | Comments)+ ~ punct_word* ~ EOI }
 punct_word = _{ " " | "\n" | "\t" }
 
 SExpressions = _{ SExpression ~ (punct_word* ~ SExpression)* }
