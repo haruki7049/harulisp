@@ -31,7 +31,7 @@ fn test() -> anyhow::Result<()> {
         .arg("--script")
         .arg(
             "(def main (lambda '() (echo_foobar)))
-              (def echo_foobar (lambda '() (progn (write_line \"foobar\"))))",
+             (def echo_foobar (lambda '() (progn (write_line \"foobar\"))))",
         )
         .assert()
         .success();
@@ -40,9 +40,8 @@ fn test() -> anyhow::Result<()> {
         .arg("--script")
         .arg(
             "(def main (lambda '() (echo_foobar)))
-              (def echo_foobar (lambda '() (progn (write_line \"foobar\"))))
-
-              ",
+             (def echo_foobar (lambda '() (progn (write_line \"foobar\"))))
+            ",
         )
         .assert()
         .success();
