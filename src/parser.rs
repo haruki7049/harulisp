@@ -141,8 +141,7 @@ mod tests {
 
     #[test]
     fn parse_sexpr() -> anyhow::Result<()> {
-        let result =
-            parser::parse("(hoge fuga)")?;
+        let result = parser::parse("(hoge fuga)")?;
 
         assert_eq!(
             result,
