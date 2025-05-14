@@ -147,20 +147,18 @@ mod tests {
         assert_eq!(
             result,
             Program {
-                statements: vec![
+                statements: vec![Token::SExpression(vec![
+                    Token::Word(String::from("def")),
+                    Token::Word(String::from("main")),
                     Token::SExpression(vec![
-                        Token::Word(String::from("def")),
-                        Token::Word(String::from("main")),
+                        Token::Word(String::from("lambda")),
+                        Token::List(vec![]),
                         Token::SExpression(vec![
-                            Token::Word(String::from("lambda")),
-                            Token::List(vec![]),
-                            Token::SExpression(vec![
-                                Token::Word(String::from("println")),
-                                Token::String(String::from("\"This is the example text. FOO!!\"")),
-                            ])
+                            Token::Word(String::from("println")),
+                            Token::String(String::from("\"This is the example text. FOO!!\"")),
                         ])
                     ])
-                ]
+                ])]
             }
         );
         Ok(())
