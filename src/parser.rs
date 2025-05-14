@@ -140,7 +140,24 @@ mod tests {
     use crate::parser::{Program, Token};
 
     #[test]
-    fn parse() -> anyhow::Result<()> {
+    fn parse_sexpr() -> anyhow::Result<()> {
+        let result =
+            parser::parse("(hoge fuga)")?;
+
+        assert_eq!(
+            result,
+            Program {
+                statements: vec![Token::SExpression(vec![
+                    Token::Word(String::from("hoge")),
+                    Token::Word(String::from("fuga")),
+                ])]
+            }
+        );
+        Ok(())
+    }
+
+    #[test]
+    fn parse_main_func() -> anyhow::Result<()> {
         let result =
             parser::parse("(def main (lambda '() (println \"This is the example text. FOO!!\")))")?;
 
