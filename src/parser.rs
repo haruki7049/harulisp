@@ -8,16 +8,37 @@ pub struct HarulispParser;
 
 #[derive(Debug, Default, PartialEq, Eq)]
 pub struct Program {
-    statements: Vec<Token>,
+    pub statements: Vec<Token>,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Token {
     String(String),
     Word(String),
     Int(i32),
     SExpression(Vec<Token>),
     List(Vec<Token>),
+}
+
+impl Token {
+    pub fn is_word(&self) -> bool {
+        match self {
+            Token::Word(_) => true,
+            _ => false,
+        }
+    }
+}
+
+impl std::fmt::Display for Token {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Token::Word(w) => write!(f, "{}", w),
+
+            Token::String(_) | Token::Int(_) | Token::SExpression(_) | Token::List(_) => {
+                Err(std::fmt::Error)
+            }
+        }
+    }
 }
 
 fn parse_pair(pair: Pair<Rule>) -> anyhow::Result<Program> {
