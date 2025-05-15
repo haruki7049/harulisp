@@ -1,9 +1,9 @@
 mod value;
 use crate::parser;
-use crate::parser::Program;
+use crate::parser::{Program, Token};
 use anyhow::Context as _;
 use std::collections::HashMap;
-use value::{Action, Atom, Type};
+use value::{Action, Atom, BuiltinFunction, Type};
 
 /// Evaluates a String as Harulisp
 pub fn eval(str: String) -> anyhow::Result<()> {
@@ -21,6 +21,16 @@ pub fn eval(str: String) -> anyhow::Result<()> {
 struct HarulispMachine {
     variables: HashMap<String, Type>,
     entrypoint: String,
+}
+
+impl Token {
+    fn to_atom(&self) -> Atom {
+        match self {
+            Token::String(s) => Atom::String(s.clone()),
+            Token::Int(i) => Atom::Int(*i),
+            _ => todo!(),
+        }
+    }
 }
 
 impl Machine for HarulispMachine {
@@ -46,28 +56,9 @@ impl Machine for HarulispMachine {
             entrypoint: String::from("main"),
         };
 
-        dbg!(&program);
-
-        machine.append(
-            String::from("main"),
-            Type::Lambda(
-                (
-                    vec![],
-                    Box::new(Action::Progn(vec![
-                        Action::Print(Atom::Int(1)),
-                        Action::Print(Atom::Int(33)),
-                    ]
-                )
-            ))),
-        );
-        machine.append(
-            String::from("main"),
-            Type::Lambda((vec![], Box::new(Action::Print(Atom::Int(3))))),
-        );
-        //machine.append(
-        //    String::from("main"),
-        //    Type::List(vec![Type::Atom(Atom::Int(3))]),
-        //);
+        for statement in &program.statements {
+            load_sexpr(&mut machine, statement)?;
+        }
 
         Ok(machine)
     }
@@ -92,7 +83,7 @@ impl Machine for HarulispMachine {
 
 fn run_action(args: &Vec<Type>, action: &Action) -> anyhow::Result<()> {
     if args.len() != 0 {
-        return anyhow::bail!("");
+        todo!("");
     }
 
     match action {
@@ -105,6 +96,44 @@ fn run_action(args: &Vec<Type>, action: &Action) -> anyhow::Result<()> {
     }
 
     Ok(())
+}
+
+fn load_sexpr(machine: &mut HarulispMachine, token: &Token) -> anyhow::Result<()> {
+    match token {
+        Token::SExpression(tokens) => {
+            // whether the function name is "def" or not
+            match &tokens[0] {
+                Token::Word(s) => match s.as_str() {
+                    "def" => {
+                        let name: String = tokens[1].to_string();
+                        //let value: Type = tokens[2].to_type();
+
+                        machine.append(name, value);
+                        Ok(())
+                    },
+                    "lambda" => {
+                        //let arguments: Type = tokens[1].to_type();
+                        //let sexpr: Type = tokens[2].to_type();
+
+                        dbg!(&arguments);
+                        dbg!(&sexpr);
+
+                        todo!();
+                        //Ok(())
+                    },
+                    "println" => {
+                        let value: &Atom = &tokens[1].to_atom();
+
+                        Ok(())
+                    }
+                    _ => todo!(),
+                },
+
+                _ => unreachable!(),
+            }
+        }
+        _ => unreachable!(),
+    }
 }
 
 trait Machine {

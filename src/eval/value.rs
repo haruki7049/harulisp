@@ -4,6 +4,12 @@ pub enum Type {
     List(Vec<Type>),
     Variable(Box<Type>),
     Lambda((Vec<Type>, Box<Action>)),
+    BuiltinFunction(BuiltinFunction),
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum BuiltinFunction {
+    Def,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -25,6 +31,17 @@ impl std::fmt::Display for Atom {
         match self {
             Atom::String(s) => write!(f, "{}", s),
             Atom::Int(i) => write!(f, "{}", i),
+        }
+    }
+}
+
+impl std::str::FromStr for BuiltinFunction {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "def" => Ok(BuiltinFunction::Def),
+            v => anyhow::bail!("EVAL ERROR: Cannot find {} for BuiltinFunction", v),
         }
     }
 }
