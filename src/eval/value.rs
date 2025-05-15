@@ -3,7 +3,7 @@ pub enum Type {
     Atom(Atom),
     List(Vec<Type>),
     Variable(Box<Type>),
-    IO(Box<Action>),
+    Lambda((Vec<Type>, Box<Action>)),
 }
 
 #[derive(Debug, PartialEq, Eq)]
