@@ -31,7 +31,10 @@ impl Machine for HarulispMachine {
 
         match entrypoint {
             Type::IO(action) => run_action(action),
-            v => anyhow::bail!("EVAL ERROR: The entrypoint cannot receive other types instead of IO Type. The value -> {}", v),
+            v => anyhow::bail!(
+                "EVAL ERROR: The entrypoint cannot receive other types instead of IO Type. The value -> {}",
+                v
+            ),
         }
 
         Ok(())
@@ -79,9 +82,11 @@ impl Machine for HarulispMachine {
 
 fn run_action(action: &Action) {
     match action {
-        Action::Progn(v) => for action in v {
-            run_action(action);
-        },
+        Action::Progn(v) => {
+            for action in v {
+                run_action(action);
+            }
+        }
         Action::Print(v) => println!("{}", v),
     }
 }
