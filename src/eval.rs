@@ -3,7 +3,7 @@ use crate::parser;
 use crate::parser::{Program, Token};
 use anyhow::Context as _;
 use std::collections::HashMap;
-use value::{Action, Atom, BuiltinFunction, Type};
+use value::{Action, Atom, Type};
 
 /// Evaluates a String as Harulisp
 pub fn eval(str: String) -> anyhow::Result<()> {
@@ -106,26 +106,19 @@ fn load_sexpr(machine: &mut HarulispMachine, token: &Token) -> anyhow::Result<()
                 Token::Word(s) => match s.as_str() {
                     "def" => {
                         let name: String = tokens[1].to_string();
-                        //let value: Type = tokens[2].to_type();
+                        let value: &Token = &tokens[2];
 
-                        machine.append(name, value);
-                        Ok(())
+                        //machine.append(name, value);
+                        todo!()
                     }
                     "lambda" => {
                         //let arguments: Type = tokens[1].to_type();
                         //let sexpr: Type = tokens[2].to_type();
 
-                        dbg!(&arguments);
-                        dbg!(&sexpr);
-
-                        todo!();
                         //Ok(())
+                        todo!()
                     }
-                    "println" => {
-                        let value: &Atom = &tokens[1].to_atom();
-
-                        Ok(())
-                    }
+                    "println" => todo!(),
                     _ => todo!(),
                 },
 
