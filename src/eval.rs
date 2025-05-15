@@ -32,7 +32,7 @@ impl Machine for HarulispMachine {
         match entrypoint {
             Type::IO(action) => run_action(action),
             v => anyhow::bail!(
-                "EVAL ERROR: The entrypoint cannot receive other types instead of IO Type. The value -> {}",
+                "EVAL ERROR: The entrypoint cannot receive other types instead of IO Type. The value -> {:?}",
                 v
             ),
         }
@@ -58,6 +58,10 @@ impl Machine for HarulispMachine {
             String::from("main"),
             Type::IO(Box::new(Action::Print(Atom::Int(3)))),
         );
+        //machine.append(
+        //    String::from("main"),
+        //    Type::List(vec![Type::Atom(Atom::Int(3))]),
+        //);
 
         Ok(machine)
     }
