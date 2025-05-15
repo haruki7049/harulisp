@@ -20,26 +20,11 @@ pub enum Action {
     Progn(Vec<Action>),
 }
 
-impl Type {
-    pub fn is_io(&self) -> bool {
-        match self {
-            Type::IO(_) => true,
-            _ => false,
-        }
-    }
-}
-
 impl std::fmt::Display for Atom {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Atom::String(s) => write!(f, "{}", s),
             Atom::Int(i) => write!(f, "{}", i),
         }
-    }
-}
-
-impl std::fmt::Display for Type {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        todo!()
     }
 }
