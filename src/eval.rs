@@ -27,8 +27,12 @@ impl Machine for HarulispMachine {
     /// Run Harulisp
     fn run(&self) -> anyhow::Result<()> {
         let entrypoint: &Type = self.get(self.entrypoint())?;
+        dbg!(&entrypoint);
 
-        dbg!(entrypoint);
+        match entrypoint {
+            Type::IO(action) => run_recursive(action),
+            v => anyhow::bail!("EVAL ERROR: The entrypoint cannot receive other types instead of IO Type. The value -> {}", v),
+        }
 
         todo!()
     }
@@ -74,6 +78,15 @@ impl Machine for HarulispMachine {
     /// Reads the entrypoint's name
     fn entrypoint(&self) -> &String {
         &self.entrypoint
+    }
+}
+
+fn run_recursive(action: &Action) {
+    match action {
+        Action::Progn(v) => for action in v {
+            run_recursive(action);
+        },
+        Action::Print(v) => println!("{}", v),
     }
 }
 
