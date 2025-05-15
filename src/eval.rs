@@ -27,7 +27,6 @@ impl Machine for HarulispMachine {
     /// Run Harulisp
     fn run(&self) -> anyhow::Result<()> {
         let entrypoint: &Type = self.get(self.entrypoint())?;
-        dbg!(&entrypoint);
 
         match entrypoint {
             Type::IO(action) => run_action(action),
@@ -41,11 +40,13 @@ impl Machine for HarulispMachine {
     }
 
     /// Load scripts
-    fn load(_program: Program) -> anyhow::Result<HarulispMachine> {
+    fn load(program: Program) -> anyhow::Result<HarulispMachine> {
         let mut machine: HarulispMachine = HarulispMachine {
             variables: HashMap::new(),
             entrypoint: String::from("main"),
         };
+
+        dbg!(&program);
 
         machine.append(
             String::from("main"),
