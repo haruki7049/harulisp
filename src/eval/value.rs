@@ -1,28 +1,39 @@
 #[derive(Debug, PartialEq, Eq)]
-pub enum Value {
+pub enum Type {
+    Atom(Atom),
+    List(Vec<Type>),
+    Variable(Box<Type>),
+    IO(Box<Action>),
+}
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum Atom {
     String(String),
     Int(i32),
-    List(Vec<Value>),
-    IO(Box<Action>),
-    Variable(Box<Value>),
 }
 
 #[derive(Debug, PartialEq, Eq)]
 /// Action
-/// HarulispMachine reads the entrypoint's `Vec<Action>`
+/// HarulispMachine reads the entrypoint's `Action`
 pub enum Action {
-    Print(Value),
+    Print(Atom),
     Progn(Vec<Action>),
 }
 
-impl Value {
-    pub fn is_atom(&self) -> bool {
+impl Type {
+    pub fn is_io(&self) -> bool {
         match self {
-            Value::String(_) => true,
-            Value::Int(_) => true,
-            Value::List(_) => false,
-            Value::IO(_) => false,
-            Value::Variable(_) => false,
+            Type::IO(_) => true,
+            _ => false,
+        }
+    }
+}
+
+impl std::fmt::Display for Atom {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Atom::String(s) => write!(f, "{}", s),
+            Atom::Int(i) => write!(f, "{}", i),
         }
     }
 }
