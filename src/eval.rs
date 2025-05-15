@@ -110,7 +110,7 @@ fn load_sexpr(machine: &mut HarulispMachine, token: &Token) -> anyhow::Result<()
 
                         machine.append(name, value);
                         Ok(())
-                    },
+                    }
                     "lambda" => {
                         //let arguments: Type = tokens[1].to_type();
                         //let sexpr: Type = tokens[2].to_type();
@@ -120,7 +120,7 @@ fn load_sexpr(machine: &mut HarulispMachine, token: &Token) -> anyhow::Result<()
 
                         todo!();
                         //Ok(())
-                    },
+                    }
                     "println" => {
                         let value: &Atom = &tokens[1].to_atom();
 
