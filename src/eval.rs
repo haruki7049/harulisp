@@ -30,11 +30,11 @@ impl Machine for HarulispMachine {
         dbg!(&entrypoint);
 
         match entrypoint {
-            Type::IO(action) => run_recursive(action),
+            Type::IO(action) => run_action(action),
             v => anyhow::bail!("EVAL ERROR: The entrypoint cannot receive other types instead of IO Type. The value -> {}", v),
         }
 
-        todo!()
+        Ok(())
     }
 
     /// Load scripts
@@ -44,10 +44,6 @@ impl Machine for HarulispMachine {
             entrypoint: String::from("main"),
         };
 
-        //machine.append(
-        //    String::from("main"),
-        //    Type::IO(Box::new(Action::Print(Atom::Int(3)))),
-        //);
         machine.append(
             String::from("main"),
             Type::IO(Box::new(Action::Progn(vec![
@@ -55,10 +51,10 @@ impl Machine for HarulispMachine {
                 Action::Print(Atom::Int(33)),
             ]))),
         );
-        //machine.append(
-        //    String::from("main"),
-        //    Atom::Int(1),
-        //);
+        machine.append(
+            String::from("main"),
+            Type::IO(Box::new(Action::Print(Atom::Int(3)))),
+        );
 
         Ok(machine)
     }
@@ -81,10 +77,10 @@ impl Machine for HarulispMachine {
     }
 }
 
-fn run_recursive(action: &Action) {
+fn run_action(action: &Action) {
     match action {
         Action::Progn(v) => for action in v {
-            run_recursive(action);
+            run_action(action);
         },
         Action::Print(v) => println!("{}", v),
     }
