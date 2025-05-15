@@ -3,7 +3,7 @@ use crate::parser;
 use crate::parser::{Program, Token};
 use anyhow::Context as _;
 use std::collections::HashMap;
-use value::{Action, Atom, BuiltinFunction, Type};
+use value::{Action, Atom, Type};
 
 /// Evaluates a String as Harulisp
 pub fn eval(str: String) -> anyhow::Result<()> {
@@ -48,8 +48,6 @@ impl Machine for HarulispMachine {
         };
 
         for statement in &program.statements {
-            dbg!(Type::try_from(statement)?);
-
             //machine.append();
         }
 
