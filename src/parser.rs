@@ -11,7 +11,7 @@ pub struct Program {
     pub statements: Vec<Token>,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Token {
     String(String),
     Word(String),
