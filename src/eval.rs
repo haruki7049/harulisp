@@ -29,12 +29,12 @@ impl Machine for HarulispMachine {
         let entrypoint: &Type = self.get(self.entrypoint())?;
 
         match entrypoint {
-            Type::IO(action) => run_action(action),
+            Type::Lambda((args, action)) => run_action(args, action),
             v => anyhow::bail!(
-                "EVAL ERROR: The entrypoint cannot receive other types instead of IO Type. The value -> {:?}",
+                "EVAL ERROR: The entrypoint cannot receive other types instead of Lambda Type. The value -> {:?}",
                 v
             ),
-        }
+        }?;
 
         Ok(())
     }
@@ -50,14 +50,19 @@ impl Machine for HarulispMachine {
 
         machine.append(
             String::from("main"),
-            Type::IO(Box::new(Action::Progn(vec![
-                Action::Print(Atom::Int(1)),
-                Action::Print(Atom::Int(33)),
-            ]))),
+            Type::Lambda(
+                (
+                    vec![],
+                    Box::new(Action::Progn(vec![
+                        Action::Print(Atom::Int(1)),
+                        Action::Print(Atom::Int(33)),
+                    ]
+                )
+            ))),
         );
         machine.append(
             String::from("main"),
-            Type::IO(Box::new(Action::Print(Atom::Int(3)))),
+            Type::Lambda((vec![], Box::new(Action::Print(Atom::Int(3))))),
         );
         //machine.append(
         //    String::from("main"),
@@ -85,15 +90,21 @@ impl Machine for HarulispMachine {
     }
 }
 
-fn run_action(action: &Action) {
+fn run_action(args: &Vec<Type>, action: &Action) -> anyhow::Result<()> {
+    if args.len() != 0 {
+        return anyhow::bail!("");
+    }
+
     match action {
         Action::Progn(v) => {
             for action in v {
-                run_action(action);
+                run_action(args, action)?;
             }
         }
         Action::Print(v) => println!("{}", v),
     }
+
+    Ok(())
 }
 
 trait Machine {
