@@ -3,7 +3,7 @@ use crate::parser;
 use crate::parser::{Program, Token};
 use anyhow::Context as _;
 use std::collections::HashMap;
-use value::{Action, Atom, Type};
+use value::{Action, Atom, BuiltinFunction, Type};
 
 /// Evaluates a String as Harulisp
 pub fn eval(str: String) -> anyhow::Result<()> {
@@ -23,30 +23,21 @@ struct HarulispMachine {
     entrypoint: String,
 }
 
-impl Token {
-    fn to_atom(&self) -> Atom {
-        match self {
-            Token::String(s) => Atom::String(s.clone()),
-            Token::Int(i) => Atom::Int(*i),
-            _ => todo!(),
-        }
-    }
-}
-
 impl Machine for HarulispMachine {
     /// Run Harulisp
     fn run(&self) -> anyhow::Result<()> {
         let entrypoint: &Type = self.get(self.entrypoint())?;
+        dbg!(entrypoint);
 
-        match entrypoint {
-            Type::Lambda((args, action)) => run_action(args, action),
-            v => anyhow::bail!(
-                "EVAL ERROR: The entrypoint cannot receive other types instead of Lambda Type. The value -> {:?}",
-                v
-            ),
-        }?;
+        //match entrypoint {
+        //    //Type::BuiltinFunction(BuiltinFunction::Lambda) => run_action(args, action),
+        //    v => anyhow::bail!(
+        //        "EVAL ERROR: The entrypoint cannot receive other types instead of Lambda Type. The value -> {:?}",
+        //        v
+        //    ),
+        //};
 
-        Ok(())
+        todo!()
     }
 
     /// Load scripts
@@ -57,10 +48,14 @@ impl Machine for HarulispMachine {
         };
 
         for statement in &program.statements {
-            load_sexpr(&mut machine, statement)?;
+            dbg!(Type::try_from(statement)?);
+
+            //machine.append();
         }
 
-        Ok(machine)
+        todo!()
+
+        //Ok(machine)
     }
 
     /// Append variables
@@ -78,6 +73,13 @@ impl Machine for HarulispMachine {
     /// Reads the entrypoint's name
     fn entrypoint(&self) -> &String {
         &self.entrypoint
+    }
+
+    fn deref_variable(&self, token: &Token) -> anyhow::Result<&Type> {
+        match token {
+            Token::Word(s) => todo!(),
+            v => anyhow::bail!("EVAL ERROR: Cannot dereference {:?}", v),
+        }
     }
 }
 
@@ -98,37 +100,6 @@ fn run_action(args: &Vec<Type>, action: &Action) -> anyhow::Result<()> {
     Ok(())
 }
 
-fn load_sexpr(machine: &mut HarulispMachine, token: &Token) -> anyhow::Result<()> {
-    match token {
-        Token::SExpression(tokens) => {
-            // whether the function name is "def" or not
-            match &tokens[0] {
-                Token::Word(s) => match s.as_str() {
-                    "def" => {
-                        let name: String = tokens[1].to_string();
-                        let value: &Token = &tokens[2];
-
-                        //machine.append(name, value);
-                        todo!()
-                    }
-                    "lambda" => {
-                        //let arguments: Type = tokens[1].to_type();
-                        //let sexpr: Type = tokens[2].to_type();
-
-                        //Ok(())
-                        todo!()
-                    }
-                    "println" => todo!(),
-                    _ => todo!(),
-                },
-
-                _ => unreachable!(),
-            }
-        }
-        _ => unreachable!(),
-    }
-}
-
 trait Machine {
     /// Run Harulisp
     fn run(&self) -> anyhow::Result<()>;
@@ -144,4 +115,7 @@ trait Machine {
 
     /// Reads the entrypoint's name
     fn entrypoint(&self) -> &String;
+
+    /// Resolves the variable's value
+    fn deref_variable(&self, token: &Token) -> anyhow::Result<&Type>;
 }
