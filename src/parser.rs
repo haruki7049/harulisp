@@ -20,6 +20,15 @@ pub enum Token {
     List(Vec<Token>),
 }
 
+impl Token {
+    pub fn is_word(&self) -> bool {
+        match self {
+            Token::Word(_) => true,
+            _ => false,
+        }
+    }
+}
+
 impl std::fmt::Display for Token {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
