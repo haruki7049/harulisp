@@ -1,6 +1,12 @@
 #[derive(Debug, Default, PartialEq, Eq)]
 pub struct Tokens(Vec<Token>);
 
+impl From<Vec<Token>> for Tokens {
+    fn from(value: Vec<Token>) -> Self {
+        Self(value)
+    }
+}
+
 #[derive(Debug, PartialEq, Eq)]
 pub enum Token {
     String(String),
@@ -37,30 +43,25 @@ impl Into<Token> for ReservedWord {
 pub enum TokenizeError {
     #[error("Failed to tokenize it: {str:?}")]
     InvalidProgram { str: String },
+
+    #[error("Invalid charactor for harulisp: {char:?}")]
+    InvalidCharactor { char: char },
 }
 
-pub fn tokenize(s: String) -> Result<Tokens, TokenizeError> {
-    if s == "" {
-        return Ok(Tokens(vec![]));
+pub fn tokenize(program: String) -> Result<Tokens, TokenizeError> {
+    let mut tokens_inner: Vec<Token> = Vec::new();
+
+    for c in program.chars().into_iter() {
+        match c {
+            '(' => tokens_inner.push(ReservedWord::LeftParenthesis.into()),
+            ')' => tokens_inner.push(ReservedWord::RightParenthesis.into()),
+            ' ' => (),
+            '\n' => (),
+            _ => return Err(TokenizeError::InvalidCharactor { char: c }),
+        }
     }
 
-    if s == "()" {
-        return Ok(Tokens(vec![
-            ReservedWord::LeftParenthesis.into(),
-            ReservedWord::RightParenthesis.into(),
-        ]));
-    }
-
-    if s == "(())" {
-        return Ok(Tokens(vec![
-            ReservedWord::LeftParenthesis.into(),
-            ReservedWord::LeftParenthesis.into(),
-            ReservedWord::RightParenthesis.into(),
-            ReservedWord::RightParenthesis.into(),
-        ]));
-    }
-
-    Err(TokenizeError::InvalidProgram { str: s })
+    return Ok(tokens_inner.into());
 }
 
 #[cfg(test)]
