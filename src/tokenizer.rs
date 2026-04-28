@@ -14,6 +14,20 @@ pub enum Token {
     Integer(i32),
 }
 
+impl From<ReservedWord> for Token {
+    fn from(value: ReservedWord) -> Self {
+        match value {
+            ReservedWord::Def => Self::Reserved(ReservedWord::Def),
+            ReservedWord::Main => Self::Reserved(ReservedWord::Main),
+            ReservedWord::Print => Self::Reserved(ReservedWord::Print),
+            ReservedWord::Lambda => Self::Reserved(ReservedWord::Lambda),
+            ReservedWord::LeftParenthesis => Self::Reserved(ReservedWord::LeftParenthesis),
+            ReservedWord::RightParenthesis => Self::Reserved(ReservedWord::RightParenthesis),
+            ReservedWord::Dash => Self::Reserved(ReservedWord::Dash),
+        }
+    }
+}
+
 #[derive(Debug, PartialEq, Eq)]
 pub enum ReservedWord {
     Def,
@@ -23,20 +37,6 @@ pub enum ReservedWord {
     LeftParenthesis,
     RightParenthesis,
     Dash,
-}
-
-impl Into<Token> for ReservedWord {
-    fn into(self) -> Token {
-        match self {
-            Self::Def => Token::Reserved(Self::Def),
-            Self::Main => Token::Reserved(Self::Main),
-            Self::Print => Token::Reserved(Self::Print),
-            Self::Lambda => Token::Reserved(Self::Lambda),
-            Self::LeftParenthesis => Token::Reserved(Self::LeftParenthesis),
-            Self::RightParenthesis => Token::Reserved(Self::RightParenthesis),
-            Self::Dash => Token::Reserved(Self::Dash),
-        }
-    }
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -61,7 +61,7 @@ pub fn tokenize(program: String) -> Result<Tokens, TokenizeError> {
         }
     }
 
-    return Ok(tokens_inner.into());
+    Ok(tokens_inner.into())
 }
 
 #[cfg(test)]
