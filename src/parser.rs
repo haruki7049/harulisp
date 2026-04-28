@@ -44,7 +44,7 @@ fn parse_pair(pair: Pair<Rule>) -> anyhow::Result<Program> {
             rule.clone().for_each(|w| match w.as_rule() {
                 Rule::List => result.statements.push(parse_list(w).unwrap()),
                 Rule::SExpression => result.statements.push(parse_sexp(w).unwrap()),
-                Rule::EOI => return,
+                Rule::EOI => (),
                 Rule::Comment => (),
                 Rule::program
                 | Rule::Comments
@@ -69,7 +69,7 @@ fn parse_sexp(sexpr: Pair<Rule>) -> anyhow::Result<Token> {
 
     let mut rule = sexpr.into_inner();
     let _left_parenthesis: Pair<Rule> = rule.next().unwrap(); // "("
-    let mut words: Vec<Pair<Rule>> = rule.into_iter().collect(); // "defvar"
+    let mut words: Vec<Pair<Rule>> = rule.collect(); // "defvar"
     let _right_parenthesis: Pair<Rule> = words.pop().unwrap(); // ")"
 
     for w in words {
@@ -101,7 +101,7 @@ fn parse_list(list: Pair<Rule>) -> anyhow::Result<Token> {
 
     let mut rule = list.into_inner();
     let _left_parenthesis: Pair<Rule> = rule.next().unwrap(); // "("
-    let mut words: Vec<Pair<Rule>> = rule.into_iter().collect(); // "defvar"
+    let mut words: Vec<Pair<Rule>> = rule.collect(); // "defvar"
     let _right_parenthesis: Pair<Rule> = words.pop().unwrap(); // ")"
 
     for w in words {
