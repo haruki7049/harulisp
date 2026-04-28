@@ -53,7 +53,7 @@ mod tests {
                         Token::List(vec![]),
                         Token::SExpression(vec![
                             Token::Word(String::from("println")),
-                            Token::String(String::from("\"This is the example text. FOO!!\"")),
+                            Token::String(String::from("This is the example text. FOO!!")),
                         ])
                     ])
                 ])]
