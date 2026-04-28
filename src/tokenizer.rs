@@ -97,7 +97,7 @@ pub fn tokenize(program: String) -> Result<Tokens, TokenizeError> {
     let mut word_cache = WordCache::default();
     // dbg!(&word_cache); // for Debugging
 
-    for c in program.chars().into_iter() {
+    for c in program.chars() {
         word_cache.push(c);
         // dbg!(&word_cache); // for Debugging
 
