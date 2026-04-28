@@ -1,7 +1,6 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    systems.url = "github:nix-systems/default";
     crane.url = "github:ipetkov/crane";
     flake-compat.url = "github:edolstra/flake-compat";
     flake-parts = {
@@ -21,7 +20,11 @@
   outputs =
     inputs:
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = import inputs.systems;
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "aarch64-darwin"
+      ];
 
       imports = [
         inputs.treefmt-nix.flakeModule
@@ -38,22 +41,33 @@
           rust = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
           craneLib = (inputs.crane.mkLib pkgs).overrideToolchain rust;
           overlays = [ inputs.rust-overlay.overlays.default ];
+
           src = lib.cleanSource ./.;
+          buildInputs = [ ];
+          nativeBuildInputs = [
+              rust # Rust toolchain
+              pkgs.nil # Nix LSP
+          ];
+
           cargoArtifacts = craneLib.buildDepsOnly {
-            inherit src;
+            inherit src nativeBuildInputs buildInputs;
           };
           harulisp = craneLib.buildPackage {
-            inherit src cargoArtifacts;
+            inherit src cargoArtifacts nativeBuildInputs buildInputs;
             strictDeps = true;
-
             doCheck = true;
+
+            meta = {
+              licenses = [ lib.licenses.mit ];
+              mainProgram = "harulisp";
+            };
           };
           cargo-clippy = craneLib.cargoClippy {
-            inherit src cargoArtifacts;
-            cargoClippyExtraArgs = "--verbose -- --deny warning";
+            inherit src cargoArtifacts nativeBuildInputs buildInputs;
+            cargoClippyExtraArgs = "--verbose -- --deny warnings";
           };
           cargo-doc = craneLib.cargoDoc {
-            inherit src cargoArtifacts;
+            inherit src cargoArtifacts nativeBuildInputs buildInputs;
           };
         in
         {
@@ -69,6 +83,7 @@
 
             # Rust
             programs.rustfmt.enable = true;
+            settings.formatter.rustfmt.command = "${rust}/bin/rustfmt";
 
             # TOML
             programs.taplo.enable = true;
@@ -99,13 +114,7 @@
           };
 
           devShells.default = pkgs.mkShell {
-            packages = [
-              # Rust
-              rust
-
-              # Nix
-              pkgs.nil
-            ];
+            inherit buildInputs nativeBuildInputs;
 
             shellHook = ''
               export PS1="\n[nix-shell:\w]$ "
