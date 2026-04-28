@@ -1,11 +1,11 @@
 use clap::Parser;
-use harulisp::eval;
+use harulisp::tokenizer;
 
 fn main() -> anyhow::Result<()> {
     let args: CLIArgs = CLIArgs::parse();
 
-    // Evaluation
-    eval::eval(args.script)?;
+    // Tokenizer
+    tokenizer::tokenize(args.script)?;
 
     Ok(())
 }
