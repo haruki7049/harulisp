@@ -40,7 +40,18 @@ pub enum TokenizeError {
 }
 
 pub fn tokenize(s: String) -> Result<Tokens, TokenizeError> {
-    Ok(Tokens(vec![]))
+    if s == "" {
+        return Ok(Tokens(vec![]));
+    }
+
+    if s == "()" {
+        return Ok(Tokens(vec![
+            ReservedWord::LeftParenthesis.into(),
+            ReservedWord::RightParenthesis.into(),
+        ]));
+    }
+
+    Err(TokenizeError::InvalidProgram { str: s })
 }
 
 #[cfg(test)]
