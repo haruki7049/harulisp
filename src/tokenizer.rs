@@ -48,7 +48,7 @@ pub enum ReservedWord {
 
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 struct WordCache {
-    inner: Vec<char>,
+    inner: String,
 }
 
 impl WordCache {
@@ -59,26 +59,14 @@ impl WordCache {
     fn clean(&mut self) {
         self.inner.clear();
     }
-}
 
-impl From<Vec<char>> for WordCache {
-    fn from(inner: Vec<char>) -> Self {
-        Self { inner }
-    }
-}
-
-impl From<WordCache> for String {
-    fn from(value: WordCache) -> Self {
-        let mut v: Vec<char> = value.inner.clone();
-        v.reverse();
-        let result: Self = v.iter().collect();
-        result
+    fn as_str(&self) -> &str {
+        &self.inner
     }
 }
 
 impl From<String> for WordCache {
-    fn from(value: String) -> Self {
-        let inner: Vec<char> = value.chars().collect();
+    fn from(inner: String) -> Self {
         Self { inner }
     }
 }
@@ -101,8 +89,8 @@ pub fn tokenize(program: String) -> Result<Tokens, TokenizeError> {
         word_cache.push(c);
         // dbg!(&word_cache); // for Debugging
 
-        let actual_str: String = word_cache.clone().into();
-        match &actual_str[..] {
+        let actual_str = word_cache.as_str();
+        match actual_str {
             "(" => tokens.push(ReservedWord::LeftParenthesis.into(), &mut word_cache),
             ")" => tokens.push(ReservedWord::RightParenthesis.into(), &mut word_cache),
             " " => (),
