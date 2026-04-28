@@ -7,6 +7,13 @@ impl From<Vec<Token>> for Tokens {
     }
 }
 
+impl Tokens {
+    fn push(&mut self, token: Token, word_cache: &mut WordCache) {
+        self.0.push(token);
+        word_cache.clean();
+    }
+}
+
 #[derive(Debug, PartialEq, Eq)]
 pub enum Token {
     String(String),
@@ -39,6 +46,43 @@ pub enum ReservedWord {
     Dash,
 }
 
+#[derive(Debug, Default, Clone, PartialEq, Eq)]
+struct WordCache {
+    inner: Vec<char>,
+}
+
+impl WordCache {
+    fn push(&mut self, c: char) {
+        self.inner.push(c);
+    }
+
+    fn clean(&mut self) {
+        self.inner.clear();
+    }
+}
+
+impl From<Vec<char>> for WordCache {
+    fn from(inner: Vec<char>) -> Self {
+        Self { inner }
+    }
+}
+
+impl From<WordCache> for String {
+    fn from(value: WordCache) -> Self {
+        let mut v: Vec<char> = value.inner.clone();
+        v.reverse();
+        let result: Self = v.iter().collect();
+        result
+    }
+}
+
+impl From<String> for WordCache {
+    fn from(value: String) -> Self {
+        let inner: Vec<char> = value.chars().collect();
+        Self { inner }
+    }
+}
+
 #[derive(Debug, thiserror::Error)]
 pub enum TokenizeError {
     #[error("Failed to tokenize it: {str:?}")]
@@ -49,19 +93,25 @@ pub enum TokenizeError {
 }
 
 pub fn tokenize(program: String) -> Result<Tokens, TokenizeError> {
-    let mut tokens_inner: Vec<Token> = Vec::new();
+    let mut tokens = Tokens::default();
+    let mut word_cache = WordCache::default();
+    // dbg!(&word_cache); // for Debugging
 
     for c in program.chars().into_iter() {
-        match c {
-            '(' => tokens_inner.push(ReservedWord::LeftParenthesis.into()),
-            ')' => tokens_inner.push(ReservedWord::RightParenthesis.into()),
-            ' ' => (),
-            '\n' => (),
+        word_cache.push(c);
+        // dbg!(&word_cache); // for Debugging
+
+        let actual_str: String = word_cache.clone().into();
+        match &actual_str[..] {
+            "(" => tokens.push(ReservedWord::LeftParenthesis.into(), &mut word_cache),
+            ")" => tokens.push(ReservedWord::RightParenthesis.into(), &mut word_cache),
+            " " => (),
+            "\n" => (),
             _ => return Err(TokenizeError::InvalidCharactor { char: c }),
         }
     }
 
-    Ok(tokens_inner.into())
+    Ok(tokens)
 }
 
 #[cfg(test)]
