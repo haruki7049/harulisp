@@ -19,6 +19,20 @@ pub enum ReservedWord {
     Dash,
 }
 
+impl Into<Token> for ReservedWord {
+    fn into(self) -> Token {
+        match self {
+            Self::Def => Token::Reserved(Self::Def),
+            Self::Main => Token::Reserved(Self::Main),
+            Self::Print => Token::Reserved(Self::Print),
+            Self::Lambda => Token::Reserved(Self::Lambda),
+            Self::LeftParenthesis => Token::Reserved(Self::LeftParenthesis),
+            Self::RightParenthesis => Token::Reserved(Self::RightParenthesis),
+            Self::Dash => Token::Reserved(Self::Dash),
+        }
+    }
+}
+
 #[derive(Debug, thiserror::Error)]
 pub enum TokenizeError {
     #[error("Failed to tokenize it: {str:?}")]
@@ -41,5 +55,27 @@ mod tests {
 
         assert_eq!(result, Tokens(vec![]));
         Ok(())
+    }
+
+    mod parentheses {
+        use crate::tokenizer::ReservedWord;
+
+        use super::super::tokenize;
+        use super::super::Tokens;
+
+        #[test]
+        fn tokenize_parentheses() -> Result<(), Box<dyn std::error::Error>> {
+            let program: String = String::from("()");
+            let result = tokenize(program)?;
+
+            assert_eq!(
+                result,
+                Tokens(vec![
+                    ReservedWord::LeftParenthesis.into(),
+                    ReservedWord::RightParenthesis.into()
+                ])
+            );
+            Ok(())
+        }
     }
 }
