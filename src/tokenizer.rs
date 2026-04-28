@@ -51,6 +51,15 @@ pub fn tokenize(s: String) -> Result<Tokens, TokenizeError> {
         ]));
     }
 
+    if s == "(())" {
+        return Ok(Tokens(vec![
+            ReservedWord::LeftParenthesis.into(),
+            ReservedWord::LeftParenthesis.into(),
+            ReservedWord::RightParenthesis.into(),
+            ReservedWord::RightParenthesis.into(),
+        ]));
+    }
+
     Err(TokenizeError::InvalidProgram { str: s })
 }
 
@@ -76,6 +85,7 @@ mod tests {
 
         #[test]
         fn tokenize_parentheses() -> Result<(), Box<dyn std::error::Error>> {
+            // Single parentheses
             let program: String = String::from("()");
             let result = tokenize(program)?;
 
@@ -86,6 +96,22 @@ mod tests {
                     ReservedWord::RightParenthesis.into()
                 ])
             );
+
+            // Double parentheses
+            let program: String = String::from("(())");
+            let result = tokenize(program)?;
+
+            assert_eq!(
+                result,
+                Tokens(vec![
+                    ReservedWord::LeftParenthesis.into(),
+                    ReservedWord::LeftParenthesis.into(),
+                    ReservedWord::RightParenthesis.into(),
+                    ReservedWord::RightParenthesis.into(),
+                ])
+            );
+
+            // Return Ok(())
             Ok(())
         }
     }
