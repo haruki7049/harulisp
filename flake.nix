@@ -45,15 +45,20 @@
           src = lib.cleanSource ./.;
           buildInputs = [ ];
           nativeBuildInputs = [
-              rust # Rust toolchain
-              pkgs.nil # Nix LSP
+            rust # Rust toolchain
+            pkgs.nil # Nix LSP
           ];
 
           cargoArtifacts = craneLib.buildDepsOnly {
             inherit src nativeBuildInputs buildInputs;
           };
           harulisp = craneLib.buildPackage {
-            inherit src cargoArtifacts nativeBuildInputs buildInputs;
+            inherit
+              src
+              cargoArtifacts
+              nativeBuildInputs
+              buildInputs
+              ;
             strictDeps = true;
             doCheck = true;
 
@@ -63,11 +68,21 @@
             };
           };
           cargo-clippy = craneLib.cargoClippy {
-            inherit src cargoArtifacts nativeBuildInputs buildInputs;
+            inherit
+              src
+              cargoArtifacts
+              nativeBuildInputs
+              buildInputs
+              ;
             cargoClippyExtraArgs = "--verbose -- --deny warnings";
           };
           cargo-doc = craneLib.cargoDoc {
-            inherit src cargoArtifacts nativeBuildInputs buildInputs;
+            inherit
+              src
+              cargoArtifacts
+              nativeBuildInputs
+              buildInputs
+              ;
           };
         in
         {
