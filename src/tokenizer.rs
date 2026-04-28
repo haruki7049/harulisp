@@ -104,8 +104,8 @@ pub fn tokenize(program: String) -> Result<Tokens, TokenizeError> {
 
 #[cfg(test)]
 mod tests {
-    use super::tokenize;
     use super::Tokens;
+    use super::tokenize;
 
     #[test]
     fn tokenize_empty_str() -> Result<(), Box<dyn std::error::Error>> {
@@ -119,8 +119,8 @@ mod tests {
     mod parentheses {
         use crate::tokenizer::ReservedWord;
 
-        use super::super::tokenize;
         use super::super::Tokens;
+        use super::super::tokenize;
 
         #[test]
         fn tokenize_parentheses() -> Result<(), Box<dyn std::error::Error>> {
