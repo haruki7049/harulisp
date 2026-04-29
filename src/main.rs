@@ -5,7 +5,8 @@ fn main() -> anyhow::Result<()> {
     let args: CLIArgs = CLIArgs::parse();
 
     // Tokenizer
-    tokenizer::tokenize(args.script)?;
+    let tokens = tokenizer::tokenize(args.script)?;
+    dbg!(tokens);
 
     Ok(())
 }
