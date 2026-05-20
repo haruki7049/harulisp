@@ -63,6 +63,10 @@ impl WordCache {
     fn as_str(&self) -> &str {
         &self.inner
     }
+
+    fn is_empty(&self) -> bool {
+        self.inner.is_empty()
+    }
 }
 
 impl From<String> for WordCache {
@@ -75,9 +79,6 @@ impl From<String> for WordCache {
 pub enum TokenizeError {
     #[error("Failed to tokenize it: {str:?}")]
     InvalidProgram { str: String },
-
-    #[error("Invalid charactor for harulisp: {char:?}")]
-    InvalidCharactor { char: char },
 }
 
 pub fn tokenize(program: String) -> Result<Tokens, TokenizeError> {
@@ -93,10 +94,15 @@ pub fn tokenize(program: String) -> Result<Tokens, TokenizeError> {
         match actual_str {
             "(" => tokens.push(ReservedWord::LeftParenthesis.into(), &mut word_cache),
             ")" => tokens.push(ReservedWord::RightParenthesis.into(), &mut word_cache),
+            "def" => tokens.push(ReservedWord::Def.into(), &mut word_cache),
             " " => (),
             "\n" => (),
-            _ => return Err(TokenizeError::InvalidCharactor { char: c }),
+            _ => (),
         }
+    }
+
+    if !word_cache.is_empty() {
+        return Err(TokenizeError::InvalidProgram { str: word_cache.inner });
     }
 
     Ok(tokens)
@@ -116,9 +122,8 @@ mod tests {
         Ok(())
     }
 
-    mod parentheses {
-        use crate::tokenizer::ReservedWord;
-
+    mod reserved_parentheses {
+        use super::super::ReservedWord;
         use super::super::Tokens;
         use super::super::tokenize;
 
@@ -151,6 +156,23 @@ mod tests {
             );
 
             // Return Ok(())
+            Ok(())
+        }
+    }
+
+    mod reserved_def {
+        use super::super::ReservedWord;
+        use super::super::Tokens;
+        use super::super::tokenize;
+
+        #[test]
+        fn tokenize_def() -> Result<(), Box<dyn std::error::Error>> {
+            // Only def word
+            let program: String = String::from("def");
+            let result = tokenize(program)?;
+
+            assert_eq!(result, Tokens(vec![ReservedWord::Def.into()]));
+
             Ok(())
         }
     }
